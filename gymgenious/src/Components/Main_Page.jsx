@@ -58,6 +58,10 @@ export default function Main_Page() {
     setOpenSearch(true);
   };
 
+  const handleCloseSearch = () => {
+    setOpenSearch(false);
+    setClasses(totalClasses);
+  };
   
   function formatDate(date) {
     const month = String(date.getMonth() + 1).padStart(2, '0'); 
@@ -81,7 +85,7 @@ export default function Main_Page() {
                       <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>{event.name}</MDBTypography>
                       <div className="d-flex align-items-center justify-content-between mb-3">
                         <p className="small mb-0" style={{color: '#424242' }}><AccessAlarmsIcon sx={{ color: '#48CFCB'}} />{event.dateInicio.split('T')[1].split(':').slice(0, 2).join(':')} - {event.dateFin.split('T')[1].split(':').slice(0, 2).join(':')}</p>
-                        <p className="fw-bold mb-0" style={{color: '#424242' }}>{formatDate(new Date(event.dateInicio))}</p>
+                        <p className="fw-bold mb-0" style={{color: '#424242' }}>{event.permanent === 'No' ? formatDate(new Date(event.dateInicio)) : formatDate(new Date(event.start))}</p>
                       </div>
                     </div>
                     <div className="d-flex align-items-center mb-4">
@@ -109,15 +113,22 @@ export default function Main_Page() {
                     <hr />
                     <MDBCardText><CollectionsBookmarkIcon sx={{ color: '#48CFCB'}} /> {event.BookedUsers.length} booked users</MDBCardText>
                     <MDBCardText><EmailIcon sx={{ color: '#48CFCB'}} /> For any doubt ask "{event.owner}"</MDBCardText>
-                    {userMail && type === 'client' &&
+                    {userMail && type === 'client' && (
+                      (event.permanent === 'No' &&
                       (new Date(event.dateInicio).getTime() - new Date().getTime() <= 7 * 24 * 60 * 60 * 1000) &&
-                      (new Date(event.dateInicio).getTime() >= new Date().setHours(0, 0, 0, 0)) &&
-                      (event.BookedUsers.length<event.capacity)
+                      (new Date(event.dateInicio).getTime() >= new Date().setHours(0, 0, 0, 0))
+                      )
+                      ||
+                      (event.permanent === 'Si' && 
+                      (new Date(event.start).getTime() - new Date().getTime() <= 7 * 24 * 60 * 60 * 1000) &&
+                      (new Date(event.start).getTime() >= new Date().setHours(0, 0, 0, 0))
+                      )
+                    )
                       ? (
                         <>
                         {selectedEvent.BookedUsers && selectedEvent.BookedUsers.includes(userMail)  ? (
                               <MDBBtn
-                              style={{ backgroundColor: '#48CFCB', color: 'white' }} 
+                              style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
                               rounded
                               block
                               size="lg"
@@ -129,16 +140,17 @@ export default function Main_Page() {
                               <>
                               {selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
                               <MDBBtn
-                                style={{ backgroundColor: '#48CFCB', color: 'white' }} 
+                                style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
                                 rounded
                                 block
                                 size="lg"
                                 onClick={() => handleBookClass(event.id)}
                               >
-                                Book now
+                                Book
                               </MDBBtn>
                               ) :
-                              (<>
+                              (
+                              
                               <MDBBtn
                                 style={{ backgroundColor: '#48CFCB', color: 'white' }} 
                                 rounded
@@ -147,8 +159,7 @@ export default function Main_Page() {
                               >
                                 FULL
                               </MDBBtn>
-                              </>)
-                              }
+                              )}
                               </>
                         )}
                         <button 
@@ -194,6 +205,7 @@ export default function Main_Page() {
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
+    handleCloseSearch();
   };
 
   const handleCloseModal = () => {
@@ -246,7 +258,7 @@ export default function Main_Page() {
             nextStartDate.setDate(today.getDate() + daysUntilNextClass);
             nextEndDate = new Date(nextStartDate.getTime() + (CorrectEndDate.getTime() - CorrectStarDate.getTime()));
           }
-  
+          console.log(nextStartDate)
           for (let i = 0; i < 4; i++) {
             calendarEvents.push({
               title: clase.name,
@@ -259,6 +271,7 @@ export default function Main_Page() {
             nextEndDate.setDate(nextEndDate.getDate() + 7);
           }
         } else {
+          if(startDate >= today)
           calendarEvents.push({
             title: clase.name,
             start: new Date(CorrectStarDate),
@@ -391,7 +404,7 @@ export default function Main_Page() {
 
   useEffect(() => {
     if(filterClasses!=''){
-      const filteredClassesSearcher = classes.filter(item => 
+      const filteredClassesSearcher = totalClasses.filter(item => 
         item.name.toLowerCase().startsWith(filterClasses.toLowerCase())
       );
       setClasses(filteredClassesSearcher);
@@ -463,49 +476,45 @@ export default function Main_Page() {
         </div>
         ) : (
           <>
-            <div className='leftBar' style={{zIndex:'1000'}}>
-              {openSearch ? (
-                  <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search..."
+            <div className='input-container' style={{marginLeft: '50px', width: '30%', position: 'absolute', top: '0.5%'}}>
+              <div className='input-small-container'>
+                {openSearch ? (
+                    <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search..."
+                    style={{
+                      position: 'absolute',
+                      borderRadius: '10px',
+                      padding: '0 10px',
+                      transition: 'all 0.3s ease',
+                    }}
+                    id={filterClasses}
+                    onChange={(e) => setFilterClasses(e.target.value)} 
+                  />
+                ) : (
+                  <Button onClick={handleOpenSearch}
                   style={{
+                    backgroundColor: '#48CFCB',
                     position: 'absolute',
-                    top: '0.5vh',
-                    left: '7vh',
-                    width: '60vh',
+                    borderRadius: '50%',
+                    width: '5vh',
                     height: '5vh',
-                    borderRadius: '10px',
-                    padding: '0 10px',
-                    transition: 'all 0.3s ease',
+                    minWidth: '0',
+                    minHeight: '0',
+                    padding: '0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
-                  id={filterClasses}
-                  onChange={(e) => setFilterClasses(e.target.value)} 
-                />
-              ) : (
-                <Button onClick={handleOpenSearch}
-                style={{
-                  backgroundColor: '#48CFCB',
-                  position: 'absolute',
-                  borderRadius: '50%',
-                  top: '0.5vh',
-                  left: '7vh ',
-                  width: '5vh',
-                  height: '5vh',
-                  minWidth: '0',
-                  minHeight: '0',
-                  padding: '0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <SearchIcon sx={{ color: '#424242' }} />
-              </Button>
-              )}
+                >
+                  <SearchIcon sx={{ color: '#424242' }} />
+                </Button>
+                )}
+                </div>
           </div>
           <div className="Table-Container">
-            <EnhancedTable rows={classes} user={userMail} userType={type} handleBookClass={handleBookClass} handleUnbookClass={handleUnbookClass} handleSelectEvent={handleSelectEvent}/>
+            <EnhancedTable rows={classes} user={userMail} userType={type} handleSelectEvent={handleSelectEvent}/>
           </div>
         </>
       )}
