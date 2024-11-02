@@ -22,6 +22,60 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import Loader from '../real_components/loader.jsx'
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+
+const Carousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const cardCount = 10;
+  const visibleCards = 5;
+
+  const maxIndex = Math.ceil(cardCount / visibleCards) - 1;
+
+  const nextGroup = () => {
+    setCurrentIndex(currentIndex < maxIndex ? currentIndex + 1 : 1);
+  };
+
+  const prevGroup = () => {
+    setCurrentIndex(currentIndex > 0 ? currentIndex - 1 : 0);
+  };
+
+  return (
+    <div style={{ width: '100%', height: '40%', overflow: 'hidden', position: 'relative'}}>
+      <div
+        style={{
+          display: 'flex',
+          transition: 'transform 0.3s ease-in-out',
+          transform: `translateX(-${currentIndex * 100}%)`
+        }}
+      >
+        {Array.from({ length: cardCount }, (_, index) => (
+          <div
+            key={index}
+            style={{
+              minWidth: `${100 / visibleCards}%`,
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <div className="card">achievement {index + 1}</div>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={prevGroup} style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }}>
+        {'<'}
+      </button>
+      <button onClick={nextGroup} style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)' }}>
+        {'>'}
+      </button>
+    </div>
+  );
+};
 
 export default function Main_Page() {
   const [classes, setClasses] = useState([]);
@@ -44,13 +98,40 @@ export default function Main_Page() {
   const [openSearch, setOpenSearch] = useState(false);
   const [filterClasses, setFilterClasses] = useState('');
   const [totalClasses, setTotalClasses] = useState([]);
+  const [openAchievements, setOpenAchievements] = useState(false);
+  const [visibleDrawerAchievements, setVisibleDrawerAchievements] = useState(false);
+
+  const handleViewAchievements = () => {
+    setOpenAchievements(true);
+    setVisibleDrawerAchievements(true);
+  }
+
+  const handleCloseAchievements = () => {
+    setOpenAchievements(false);
+      setTimeout(() => {
+        setVisibleDrawerAchievements(false);
+      }, 450);
+  }
+  
+  const [membership, setMembership] = useState([])
+  const [userAccount, setUserAccount] = useState([])
+  const [amountClasses,setAmountClasses] = useState(0)
+  const [changingStars,setChangingStars] = useState(false)
+  const [changingComment,setChangingComment] = useState(false)
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const formattedDate = `${year}-${month}-${day}`;
 
   const handleChangeCalifyModal = () => {
+    setStars(selectedEvent.puntuacion)
     setCalifyModal(!califyModal);
   }
 
   const handleStarsChange = (e) => {
     const newStars = parseInt(e.target.value);
+    setChangingStars(true)
     setStars(newStars);
   }
 
@@ -106,7 +187,13 @@ export default function Main_Page() {
                           <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>{event.permanent==='Si' ? 'Every week' : 'Just this day'}</MDBBtn>
                           {userMail && type==='client' && (
                             <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleChangeCalifyModal}>Calify</MDBBtn>
-                          )}         
+                          )}    
+                          {userMail && type==='coach' && (
+                            <>
+                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>{event.averageCalification}</MDBBtn>
+                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>{event.commentaries}</MDBBtn>
+                            </>
+                          )}       
                         </div>
                       </div>
                     </div>
@@ -138,7 +225,7 @@ export default function Main_Page() {
                             </MDBBtn>
                             ) : (
                               <>
-                              {selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
+                              {selectedEvent.BookedUsers.length<selectedEvent.capacity  && membership[0].BookedClasses.length<membership[0].top? (
                               <MDBBtn
                                 style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
                                 rounded
@@ -148,9 +235,22 @@ export default function Main_Page() {
                               >
                                 Book
                               </MDBBtn>
+                              ) : (
+                              <>
+                              {selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
+                                <>
+                                <MDBBtn
+                                  style={{ backgroundColor: 'RED', color: 'white', width: '70%', left: '15%' }} 
+                                  rounded
+                                  block
+                                  size="lg"
+                                >
+                                  Book
+                                </MDBBtn>
+                                </>
                               ) :
                               (
-                              
+                              <>
                               <MDBBtn
                                 style={{ backgroundColor: '#48CFCB', color: 'white' }} 
                                 rounded
@@ -159,7 +259,10 @@ export default function Main_Page() {
                               >
                                 FULL
                               </MDBBtn>
+                              </>
                               )}
+                              </>)
+                              }
                               </>
                         )}
                         <button 
@@ -200,7 +303,8 @@ export default function Main_Page() {
 
   const changeShowCalendar = () => {
     setShowCalendar(prevState => !prevState);
-    handleCloseModal()
+    handleCloseSearch();
+    handleCloseModal();
   };
 
   const handleSelectEvent = (event) => {
@@ -208,6 +312,10 @@ export default function Main_Page() {
     handleCloseSearch();
   };
 
+  const handleCommentChange = (event) => {
+    setComment(event)
+    setChangingComment(true)
+  }
   const handleCloseModal = () => {
     setSelectedEvent(null);
   };
@@ -238,8 +346,22 @@ export default function Main_Page() {
       const calendarEvents = [];
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-  
-      dataWithSala.forEach(clase => {
+      const response3 = await fetch('https://two024-duplagalactica-li8t.onrender.com/get_comments');
+      if (!response3.ok) {
+        throw new Error('Error al obtener los comentarios: ' + response3.statusText);
+      }
+      const data3 = await response3.json();
+      const filteredComments = data3.filter(comment => comment.uid === userAccount.uid);
+      const dataWithSalaAndComments = dataWithSala.map(clase => {
+        const comment = filteredComments.find(c => c.cid === clase.id);
+        return {
+          ...clase,
+          comentario: comment ? comment.commentary : null,
+          puntuacion: comment ? comment.calification : -1,
+        };
+      });
+      
+      dataWithSalaAndComments.forEach(clase => {
         const startDate = new Date(clase.dateInicio);
         const CorrectStarDate = new Date(startDate.getTime() + 60 * 3 * 60 * 1000);
         const endDate = new Date(clase.dateFin);
@@ -258,7 +380,7 @@ export default function Main_Page() {
             nextStartDate.setDate(today.getDate() + daysUntilNextClass);
             nextEndDate = new Date(nextStartDate.getTime() + (CorrectEndDate.getTime() - CorrectStarDate.getTime()));
           }
-          console.log(nextStartDate)
+          
           for (let i = 0; i < 4; i++) {
             calendarEvents.push({
               title: clase.name,
@@ -282,8 +404,9 @@ export default function Main_Page() {
         }
       });
       setOpenCircularProgress(false);
+      console.log(calendarEvents)
       setEvents(calendarEvents);
-      setClasses(dataWithSala);
+      setClasses(dataWithSalaAndComments);
       setTotalClasses(dataWithSala);
     } catch (error) {
       console.error("Error fetching classes:", error);
@@ -311,6 +434,17 @@ export default function Main_Page() {
           'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify({ event: event,mail:userMail })
+      });
+      if (!response.ok) {
+        throw new Error('Error al actualizar la clase: ' + response.statusText);
+      }
+      const response2 = await fetch('https://two024-duplagalactica-li8t.onrender.com/use_membership_class', {
+        method: 'PUT', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ id: event,membId:membership[0].id })
       });
       if (!response.ok) {
         throw new Error('Error al actualizar la clase: ' + response.statusText);
@@ -348,6 +482,14 @@ export default function Main_Page() {
           'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify({ event: event,mail:userMail })
+      });
+      const response2 = await fetch('https://two024-duplagalactica-li8t.onrender.com/unuse_membership_class', {
+        method: 'PUT', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ id: event,membId:membership[0].id })
       });
       if (!response.ok) {
         throw new Error('Error al actualizar la clase: ' + response.statusText);
@@ -393,8 +535,11 @@ export default function Main_Page() {
     } else {
         console.error('No token found');
     }
-    fetchClasses();
-  }, []);
+    if (userAccount) {
+      fetchClasses();
+      fetchMissions()
+    }
+  }, [userAccount]);
 
   useEffect(() => {
     if (userMail) {
@@ -414,6 +559,74 @@ export default function Main_Page() {
 
   }, [filterClasses]);
 
+
+  const saveCalification = async (event) => {
+    setOpenCircularProgress(true);
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        console.error('Token no disponible en localStorage');
+        return;
+      }
+      let starsValue = changingStars ? stars : event.puntuacion;
+      let commentValue = changingComment ? comment : event.comentario;
+      const response = await fetch('https://two024-duplagalactica-li8t.onrender.com/add_calification', {
+        method: 'PUT', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ event: event.id,calification: starsValue,commentary: commentValue, user: userAccount.uid})
+      });
+      setChangingStars(false)
+      setChangingComment(false)
+      setOpenCircularProgress(false);
+      await fetchClasses();
+      setOpenCircularProgress(false);
+      handleChangeCalifyModal()
+      handleCloseModal();
+    } catch (error) {
+        console.error("Error fetching user:", error);
+    }
+  }
+
+
+  const fetchMissions = async () =>{
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        console.error('Token no disponible en localStorage');
+        return;
+      }
+      const response4 = await fetch(`https://two024-duplagalactica-li8t.onrender.com/get_missions`, {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+      });
+      const missions = await response4.json();
+      const missionsIds = missions.filter(mis => mis.uid === userAccount.uid).map(mis => mis.id)
+      console.log("misiones",missionsIds)
+      const formData = new FormData();
+      formData.append('misiones', missionsIds);
+      if (missionsIds.length!=0) {
+        const response5 = await fetch('https://two024-duplagalactica-li8t.onrender.com/delete_missions', {
+          method: 'DELETE', 
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: formData
+        });
+        if (!response5.ok) {
+          throw new Error('Error al actualizar la clase: ' + response5.statusText);
+        }
+      }
+    } catch (e) {
+
+    }
+  }
+
+
   const fetchUser = async () => {
     setOpenCircularProgress(true);
     try {
@@ -424,17 +637,47 @@ export default function Main_Page() {
       }
       const encodedUserMail = encodeURIComponent(userMail);
       const response = await fetch(`https://two024-duplagalactica-li8t.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
-            method: 'GET', 
-            headers: {
-              'Authorization': `Bearer ${authToken}`
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
-        }
-        const data = await response.json();
-        setType(data.type);
-        setOpenCircularProgress(false);
+          method: 'GET', 
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+      });
+      if (!response.ok) {
+          throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
+      }
+      const data = await response.json();
+      setUserAccount(data)
+      setType(data.type);
+      console.log("este es el usuario",data)
+      setOpenCircularProgress(false);
+      const response3 = await fetch(`https://two024-duplagalactica-li8t.onrender.com/get_memb_user`, {
+          method: 'GET', 
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+      });
+      if (!response3.ok) {
+          throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
+      }
+      const data3 = await response3.json();
+      const membershipsOfUser = data3.filter(memb => memb.userId == data.uid)
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      const membresiaFiltered = membershipsOfUser.filter(memb => memb.exp.split('T')[0] > formattedDate); 
+      const membershipIds = membresiaFiltered.map(memb => memb.membershipId);
+      const response2 = await fetch(`https://two024-duplagalactica-li8t.onrender.com/get_memberships`, {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+      });
+      const membresia = await response2.json();
+      const firstFiler = membresia.filter(memb => membershipIds.includes(memb.id))
+      console.log("membresia",firstFiler)
+      setMembership(firstFiler)
     } catch (error) {
         console.error("Error fetching user:", error);
     }
@@ -448,6 +691,71 @@ export default function Main_Page() {
       <WarningConnectionAlert warningConnection={warningConnection}/>
       <ErrorTokenAlert errorToken={errorToken}/>
       <NewLeftBar/>
+      {type==='client' && (
+        <>
+        <div className='input-container' style={{marginLeft: isSmallScreen700 ? showCalendar ? '60px' : openSearch ? '220px' : '114px' : showCalendar ? '50px' : openSearch ? '360px' :'96px', width: isSmallScreen700 ? '50%' : '30%', position: 'absolute', top: '0.5%'}}>
+          <div className='input-small-container'>
+            <Button onClick={handleViewAchievements}
+              style={{
+                  backgroundColor: '#48CFCB',
+                  position: 'absolute',
+                  borderRadius: '50%',
+                  width: '5vh',
+                  height: '5vh',
+                  minWidth: '0',
+                  minHeight: '0',
+                  padding: '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+              }}
+              >
+              <EmojiEventsIcon sx={{ color: '#424242' }} />
+            </Button>
+          </div>
+        </div>
+        <div className='input-container' style={{marginLeft: isSmallScreen700 ? showCalendar ? '60px' : openSearch ? '220px' : '114px' : showCalendar ? '50px' : openSearch ? '360px' :'96px', width: isSmallScreen700 ? '50%' : '30%', position: 'absolute', top: '0.5%'}}>
+          <div className='input-small-container'>
+            <Button
+              style={{
+                  backgroundColor: '#48CFCB',
+                  position: 'absolute',
+                  borderRadius: '50%',
+                  width: '5vh',
+                  height: '5vh',
+                  minWidth: '0',
+                  minHeight: '0',
+                  left: '40px',
+                  padding: '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+              }}
+              >
+              <DiamondIcon sx={{ color: 'light green' }} />
+              <>{userAccount.Gemas}</>
+            </Button>
+          </div>
+        </div>
+        </>
+      )}
+      {visibleDrawerAchievements && type==='client' && (
+        <div className='modal-achievements' onClick={handleCloseAchievements}>
+          <div className={`modal-achievements-content ${!openAchievements ? 'hide' : ''}`} onClick={(e)=>e.stopPropagation()}>
+            <Carousel/>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box sx={{ width: '75%', mr: 1 }}>
+                <LinearProgress variant="determinate" value={25} />
+              </Box>
+              <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" sx={{ color: 'white' }}>
+                  25%
+                </Typography>
+              </Box>
+            </Box>
+          </div>
+        </div>
+      )}
       {openCircularProgress ? (
               <Backdrop
               sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
@@ -476,7 +784,7 @@ export default function Main_Page() {
         </div>
         ) : (
           <>
-            <div className='input-container' style={{marginLeft: '50px', width: '30%', position: 'absolute', top: '0.5%'}}>
+            <div className='input-container' style={{marginLeft: isSmallScreen700 ? '60px' : '50px', width: isSmallScreen700 ? '150px' : '300px', position: 'absolute', top: '0.5%'}}>
               <div className='input-small-container'>
                 {openSearch ? (
                     <input
@@ -592,7 +900,7 @@ export default function Main_Page() {
                     <input 
                     type="number" 
                     id="stars" 
-                    name="stars" 
+                    name="stars"
                     value={stars}
                     min="1"
                     step='1'
@@ -606,14 +914,14 @@ export default function Main_Page() {
                     type="text" 
                     id="comment" 
                     name="comment" 
+                    placeholder={selectedEvent.comentario}
                     value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder='Optionally add a comment'
+                    onChange={(e) => handleCommentChange(e.target.value)}
                     />
                 </div>
             </div>
             <button onClick={handleChangeCalifyModal}>Cancel</button>
-            <button onClick={handleChangeCalifyModal} style={{marginLeft:'10px'}}>Send</button>
+            <button onClick={() => saveCalification(selectedEvent)} style={{marginLeft:'10px'}}>Send</button>
           </div>
         </div>
       )}

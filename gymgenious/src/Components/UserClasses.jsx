@@ -30,6 +30,60 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+
+const Carousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const cardCount = 10;
+  const visibleCards = 5;
+
+  const maxIndex = Math.ceil(cardCount / visibleCards) - 1;
+
+  const nextGroup = () => {
+    setCurrentIndex(currentIndex < maxIndex ? currentIndex + 1 : 1);
+  };
+
+  const prevGroup = () => {
+    setCurrentIndex(currentIndex > 0 ? currentIndex - 1 : 0);
+  };
+
+  return (
+    <div style={{ width: '100%', height: '40%', overflow: 'hidden', position: 'relative'}}>
+      <div
+        style={{
+          display: 'flex',
+          transition: 'transform 0.3s ease-in-out',
+          transform: `translateX(-${currentIndex * 100}%)`
+        }}
+      >
+        {Array.from({ length: cardCount }, (_, index) => (
+          <div
+            key={index}
+            style={{
+              minWidth: `${100 / visibleCards}%`,
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <div className="card">achievement {index + 1}</div>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={prevGroup} style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }}>
+        {'<'}
+      </button>
+      <button onClick={nextGroup} style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)' }}>
+        {'>'}
+      </button>
+    </div>
+  );
+};
+
 function UsserClasses() {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
@@ -38,6 +92,7 @@ function UsserClasses() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [userMail, setUserMail] = useState('');
+  const [userAccount, setUserAccount] = useState([])
   const [classes, setClasses] = useState([]);
   const isSmallScreen400 = useMediaQuery('(max-width:360px)');
   const isSmallScreen500 = useMediaQuery('(max-width:500px)');
@@ -56,10 +111,25 @@ function UsserClasses() {
   const [califyModal, setCalifyModal] = useState(false);
   const [stars, setStars] = useState(0);
   const [comment, setComment] = useState('');
-
+  const [changingStars,setChangingStars] = useState(false)
+  const [changingComment,setChangingComment] = useState(false)
   const [openSearch, setOpenSearch] = useState(false);
   const [filterClasses, setFilterClasses] = useState('');
   const [totalClasses, setTotalClasses] = useState([]);
+  const [openAchievements, setOpenAchievements] = useState(false);
+  const [visibleDrawerAchievements, setVisibleDrawerAchievements] = useState(false);
+
+  const handleViewAchievements = () => {
+    setOpenAchievements(true);
+    setVisibleDrawerAchievements(true);
+  }
+
+  const handleCloseAchievements = () => {
+    setOpenAchievements(false);
+      setTimeout(() => {
+        setVisibleDrawerAchievements(false);
+      }, 500);
+  }
 
   const handleOpenSearch = () => {
     setOpenSearch(true);
@@ -71,16 +141,18 @@ function UsserClasses() {
   };
 
   const handleChangeCalifyModal = () => {
+    setStars(selectedEvent.puntuacion)
     setCalifyModal(!califyModal);
   }
 
   const handleStarsChange = (e) => {
     const newStars = parseInt(e.target.value);
+    setChangingStars(true)
     setStars(newStars);
   }
 
   function formatDate(date) {
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses comienzan desde 0
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
     const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
     
@@ -175,8 +247,22 @@ function UsserClasses() {
           salaInfo, 
         };
       });
-      setClasses(dataWithSala);
-      setTotalClasses(dataWithSala);
+      const response3 = await fetch('https://two024-duplagalactica-li8t.onrender.com/get_comments');
+      if (!response3.ok) {
+        throw new Error('Error al obtener los comentarios: ' + response3.statusText);
+      }
+      const data3 = await response3.json();
+      const filteredComments = data3.filter(comment => comment.uid === userAccount.uid);
+      const dataWithSalaAndComments = dataWithSala.map(clase => {
+        const comment = filteredComments.find(c => c.cid === clase.id);
+        return {
+          ...clase,
+          comentario: comment ? comment.commentary : null,
+          puntuacion: comment ? comment.calification : -1,
+        };
+      });
+      setClasses(dataWithSalaAndComments);
+      setTotalClasses(dataWithSalaAndComments);
       setOpenCircularProgress(false);
     } catch (error) {
       console.error("Error fetching classes:", error);
@@ -200,6 +286,37 @@ function UsserClasses() {
 
   }, [filterClasses]);
 
+  const saveCalification = async (event) => {
+    setOpenCircularProgress(true);
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        console.error('Token no disponible en localStorage');
+        return;
+      }
+      console.log("evento",event)
+      let starsValue = changingStars ? stars : event.puntuacion;
+      let commentValue = changingComment ? comment : event.comentario;
+      const response = await fetch('https://two024-duplagalactica-li8t.onrender.com/add_calification', {
+        method: 'PUT', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ event: event.id,calification: starsValue,commentary: commentValue, user: userAccount.uid})
+      });
+      setChangingStars(false)
+      setChangingComment(false)
+      setOpenCircularProgress(false);
+      await fetchClasses();
+      setOpenCircularProgress(false);
+      handleChangeCalifyModal()
+      handleCloseModal();
+    } catch (error) {
+        console.error("Error fetching user:", error);
+    }
+  }
+  
   const verifyToken = async (token) => {
     setOpenCircularProgress(true);
     try {
@@ -234,10 +351,10 @@ useEffect(() => {
 }, [userMail]);
 
   useEffect(() => {
-    if(type==='client'){
+    if(type==='client' && userAccount){
         fetchClasses();
     }
-  }, [type])
+  }, [type,userAccount])
 
   useEffect(() => {
     if(isSmallScreen400 || isSmallScreen500) {
@@ -271,6 +388,7 @@ useEffect(() => {
             throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
         }
         const data = await response.json();
+        setUserAccount(data)
         setType(data.type);
         if(data.type!='client'){
           navigate('/');
@@ -380,7 +498,45 @@ useEffect(() => {
         ) : (
           <>
       <NewLeftBar />
-      <div className='input-container' style={{marginLeft: '50px', width: '30%', position: 'absolute', top: '0.5%'}}>
+      <div className='input-container' style={{marginLeft: isSmallScreen700 ? openSearch ? '220px' : '114px' : openSearch ? '360px' :'96px', width: isSmallScreen700 ? '50%' : '30%', position: 'absolute', top: '0.5%'}}>
+          <div className='input-small-container'>
+            <Button onClick={handleViewAchievements}
+              style={{
+                  backgroundColor: '#48CFCB',
+                  position: 'absolute',
+                  borderRadius: '50%',
+                  width: '5vh',
+                  height: '5vh',
+                  minWidth: '0',
+                  minHeight: '0',
+                  padding: '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+              }}
+              >
+              <EmojiEventsIcon sx={{ color: '#424242' }} />
+            </Button>
+          </div>
+        </div>
+        {visibleDrawerAchievements && type==='client' && (
+        <div className='modal-achievements' onClick={handleCloseAchievements}>
+          <div className={`modal-achievements-content ${!openAchievements ? 'hide' : ''}`} onClick={(e)=>e.stopPropagation()}>
+            <Carousel/>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box sx={{ width: '75%', mr: 1 }}>
+                <LinearProgress variant="determinate" value={25} />
+              </Box>
+              <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" sx={{ color: 'white' }}>
+                  25%
+                </Typography>
+              </Box>
+            </Box>
+          </div>
+        </div>
+      )}
+      <div className='input-container' style={{marginLeft: isSmallScreen700 ? '60px' : '50px', width: isSmallScreen700 ? '150px' : '300px', position: 'absolute', top: '0.5%'}}>
               <div className='input-small-container'>
                 {openSearch ? (
                     <input
@@ -659,13 +815,13 @@ useEffect(() => {
                     id="comment" 
                     name="comment" 
                     value={comment}
+                    placeholder={selectedEvent.comentario}
                     onChange={(e) => setComment(e.target.value)}
-                    placeholder='Optionally add a comment'
                     />
                 </div>
             </div>
             <button onClick={handleChangeCalifyModal}>Cancel</button>
-            <button onClick={handleChangeCalifyModal} style={{marginLeft:'10px'}}>Send</button>
+            <button onClick={() => saveCalification(selectedEvent)} style={{marginLeft:'10px'}}>Send</button>
           </div>
         </div>
       )}
