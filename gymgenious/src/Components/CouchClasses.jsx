@@ -612,6 +612,7 @@ function CouchClasses() {
           });
         }
       });
+      const argentinaDateOptions = { timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit' };
       const response4 = await fetch('https://two024-duplagalactica-li8t.onrender.com/get_assistance', {
         method: 'GET'
       });
@@ -620,16 +621,19 @@ function CouchClasses() {
       }
       const assistance_references = await response4.json();
       const dataMatches = calendarEvents.map(evento => {
+        const fechaEvento = new Date(new Date(evento.start).setHours(new Date(evento.start).getHours() - 3));
         const comment = assistance_references.find(c => 
-          (c.cid === evento.cid) && 
-          (new Date(evento.start).toISOString().split('T')[0] === new Date(c.date).toISOString().split('T')[0])
+          (c.cid === evento.id) && 
+          (fechaEvento.toISOString().split('T')[0] === new Date(c.date).toISOString().split('T')[0])
         );
         return {
           ...evento,
           fecha: comment ? comment.date : null,
         };
       });
-      console.log("asi se ven las clases",dataMatches)
+      
+      console.log("asi se ven las clases",new Date(calendarEvents[6].start).toISOString().split('T'))
+      console.log("esta es la asistencia",calendarEvents[6])
       setClasses(dataMatches);
       setTotalClasses(dataMatches);
       setOpenCircularProgress(false);
@@ -1057,17 +1061,17 @@ function CouchClasses() {
                                     {row.fecha==null && compararfechaHoy(row.start) && row.BookedUsers.length>0 ? (
                                       <>
                                       <TableRow onClick={() => handleSelectEvent(row)} hover tabIndex={-1} key={row.id} sx={{ cursor: 'pointer', borderBottom: '1px solid #424242' }}>
-                                      <TableCell component="th" scope="row" sx={{ borderBottom: '1px solid #424242',backgroundColor:'red',borderRight: '1px solid #424242', color:'black', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 'auto' }}>
+                                      <TableCell component="th" scope="row" sx={{ borderBottom: '1px solid #424242',backgroundColor:'#8ecae6',borderRight: '1px solid #424242', color:'black', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 'auto' }}>
                                           {row.name}
                                       </TableCell>
                                       {!isSmallScreen500 && (
-                                          <TableCell align="right" sx={{ borderBottom: '1px solid #424242',backgroundColor:'red', borderRight: '1px solid #424242', color: 'black' }}>{row.hour}</TableCell>
+                                          <TableCell align="right" sx={{ borderBottom: '1px solid #424242',backgroundColor:'#8ecae6', borderRight: '1px solid #424242', color: 'black' }}>{row.hour}</TableCell>
                                       )}
                                       {!isSmallScreen400 && (
-                                          <TableCell align="right" sx={{ borderBottom: '1px solid #424242',backgroundColor:'red', borderRight: '1px solid #424242', color: 'black' }}>{formatDate(new Date(row.start))}</TableCell>
+                                          <TableCell align="right" sx={{ borderBottom: '1px solid #424242',backgroundColor:'#8ecae6', borderRight: '1px solid #424242', color: 'black' }}>{formatDate(new Date(row.start))}</TableCell>
                                       )}
                                       {!isSmallScreen600 && (
-                                          <TableCell align="right" sx={{ borderBottom: '1px solid #424242',backgroundColor:'red', color: 'black' }}>{row.permanent === 'Si' ? 'Yes' : 'No'}</TableCell>
+                                          <TableCell align="right" sx={{ borderBottom: '1px solid #424242',backgroundColor:'#8ecae6', color: 'black' }}>{row.permanent === 'Si' ? 'Yes' : 'No'}</TableCell>
                                       )}
                                       </TableRow>
                                       </> ) : 
@@ -1130,7 +1134,7 @@ function CouchClasses() {
                           <>
                           <div className="check-list-container">
                             {selectedEvent?.BookedUsers?.map((user, index) => (
-                              <div key={index} className="check-list-item"  onClick={() => toggleUserSelection(user)}>
+                              <div key={index} className="check-list-item"  >
                                 {user}
                                 <Checkbox
                                   checked={selectedUsers.includes(user)}
