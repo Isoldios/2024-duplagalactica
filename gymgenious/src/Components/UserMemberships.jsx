@@ -49,7 +49,7 @@ export default function UserMemberships() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/get_membership_template', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_membership_template', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${authToken}`
@@ -111,7 +111,7 @@ export default function UserMemberships() {
         } else {
             fechaFin = 'never';
         }
-        const response = await fetch('https://two025-duplagalactica-final.onrender.com/aquire_membership_month', {
+        const response = await fetch('https://two024-duplagalactica.onrender.com/aquire_membership_month', {
           method: 'PUT', 
           headers: {
             'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ export default function UserMemberships() {
         return;
       }
       const encodedUserMail = encodeURIComponent(userMail);
-      const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
             method: 'GET', 
             headers: {
               'Authorization': `Bearer ${authToken}`
@@ -194,7 +194,7 @@ export default function UserMemberships() {
         const data = await response.json();
         setUser(data)
         setType(data.type);
-        const response3 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_memb_user`, {
+        const response3 = await fetch(`https://two024-duplagalactica.onrender.com/get_memb_user`, {
             method: 'GET', 
             headers: {
               'Authorization': `Bearer ${authToken}`
@@ -212,7 +212,7 @@ export default function UserMemberships() {
         const formattedDate = `${year}-${month}-${day}`;
         const membresiaFiltered = membershipsOfUser.filter(memb => memb.exp.split('T')[0] > formattedDate); 
         const membershipIds = membresiaFiltered.map(memb => memb.membershipId);
-        const response2 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_memberships`, {
+        const response2 = await fetch(`https://two024-duplagalactica.onrender.com/get_memberships`, {
           method: 'GET', 
           headers: {
             'Authorization': `Bearer ${authToken}`

@@ -45,7 +45,7 @@ export default function CreateAccount() {
               console.error('Token no disponible en localStorage');
               return;
             }
-            const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_users`, {
+            const response = await fetch(`https://two024-duplagalactica.onrender.com/get_users`, {
                 method: 'GET', 
                 headers: {
                   'Authorization': `Bearer ${authToken}`
@@ -88,7 +88,7 @@ export default function CreateAccount() {
               console.error('Token no disponible en localStorage');
               return;
             }
-            const response = await fetch('https://two025-duplagalactica-final.onrender.com/update_users_info', {
+            const response = await fetch('https://two024-duplagalactica.onrender.com/update_users_info', {
                 method: 'PUT', 
                 headers: {
                     'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ const fetchUser = async (setType,setOpenCircularProgress,userMail,navigate,setWa
           return;
       }
       const encodedEmail = encodeURIComponent(userMail);
-      const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_unique_user_by_email?mail=${encodedEmail}`, {
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedEmail}`, {
           method: 'GET', 
           headers: {
               'Authorization': `Bearer ${authToken}`

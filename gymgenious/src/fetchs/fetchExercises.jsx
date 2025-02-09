@@ -6,7 +6,7 @@ const fetchExercises = async (setOpenCircularProgress,setWarningConnection,setEx
             console.error('Token not available in localStorage');
             return;
         }
-        const localExercisesRequest = await fetch(`https://two025-duplagalactica-final.onrender.com/get_excersices`, {
+        const localExercisesRequest = await fetch(`https://two024-duplagalactica.onrender.com/get_excersices`, {
             method: 'GET', 
             headers: {
                 'Authorization': `Bearer ${authToken}`

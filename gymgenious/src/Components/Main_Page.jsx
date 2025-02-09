@@ -70,7 +70,7 @@ export default function Main_Page() {
         return;
       }
       const encodedUserMail = encodeURIComponent(userMail);
-      const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
           method: 'GET', 
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -82,7 +82,7 @@ export default function Main_Page() {
       const data = await response.json();
       setUserAccount(data)
       setType(data.type);      
-      const response3 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_memb_user`, {
+      const response3 = await fetch(`https://two024-duplagalactica.onrender.com/get_memb_user`, {
           method: 'GET', 
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -100,7 +100,7 @@ export default function Main_Page() {
       const formattedDate = `${year}-${month}-${day}`;
       const membresiaFiltered = membershipsOfUser.filter(memb => memb.exp.split('T')[0] > formattedDate); 
       const membershipIds = membresiaFiltered.map(memb => memb.membershipId);
-      const response2 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_memberships`, {
+      const response2 = await fetch(`https://two024-duplagalactica.onrender.com/get_memberships`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${authToken}`
@@ -461,13 +461,13 @@ export default function Main_Page() {
   const fetchClasses = async () => {
     setOpenCircularProgress(true)
     try {
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/get_classes');
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
       }
       const data = await response.json();
       
-      const response2 = await fetch('https://two025-duplagalactica-final.onrender.com/get_salas');
+      const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_salas');
       if (!response2.ok) {
         throw new Error('Error al obtener las salas: ' + response2.statusText);
       }
@@ -482,7 +482,7 @@ export default function Main_Page() {
       });
   
       const calendarEvents = [];
-      const response3 = await fetch('https://two025-duplagalactica-final.onrender.com/get_comments');
+      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments');
       if (!response3.ok) {
         throw new Error('Error al obtener los comentarios: ' + response3.statusText);
       }
@@ -587,7 +587,7 @@ export default function Main_Page() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/book_class_with_gem', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/book_class_with_gem', {
         method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',
@@ -623,7 +623,7 @@ export default function Main_Page() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/book_class', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/book_class', {
         method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',
@@ -660,7 +660,7 @@ export default function Main_Page() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/unbook_class', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/unbook_class', {
         method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',
@@ -724,7 +724,7 @@ export default function Main_Page() {
       }
       const formData = new FormData();
       formData.append('misiones', missionProgressId);
-      const response5 = await fetch('https://two025-duplagalactica-final.onrender.com/delete_missions', {
+      const response5 = await fetch('https://two024-duplagalactica.onrender.com/delete_missions', {
         method: 'DELETE', 
         headers: {
           'Authorization': `Bearer ${authToken}`
@@ -771,7 +771,7 @@ export default function Main_Page() {
         }
         let starsValue = changingStars ? stars : event.puntuacion;
         let commentValue = changingComment ? comment : event.comentario;
-        const response = await fetch('https://two025-duplagalactica-final.onrender.com/add_calification', {
+        const response = await fetch('https://two024-duplagalactica.onrender.com/add_calification', {
           method: 'PUT', 
           headers: {
             'Content-Type': 'application/json',
@@ -825,7 +825,7 @@ export default function Main_Page() {
       const formData = new FormData();
       formData.append('cant', 1);
       formData.append('uid', userAccount.uid);
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/assign_mission', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/assign_mission', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${authToken}`
@@ -836,7 +836,7 @@ export default function Main_Page() {
         throw new Error('Error al actualizar la clase: ' + response5.statusText);
       }
 
-      const response4 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_missions_progress`, {
+      const response4 = await fetch(`https://two024-duplagalactica.onrender.com/get_missions_progress`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${authToken}`
@@ -848,7 +848,7 @@ export default function Main_Page() {
       formData2.append('misiones', missionsIds);
       formData2.append('uid',userAccount.uid)
       if (missionsIds.length!=0) {
-        const response5 = await fetch('https://two025-duplagalactica-final.onrender.com/add_mission_progress', {
+        const response5 = await fetch('https://two024-duplagalactica.onrender.com/add_mission_progress', {
           method: 'DELETE', 
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -861,7 +861,7 @@ export default function Main_Page() {
       } 
 
 
-      const response6 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_missions_progress`, {
+      const response6 = await fetch(`https://two024-duplagalactica.onrender.com/get_missions_progress`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${authToken}`
@@ -871,7 +871,7 @@ export default function Main_Page() {
       const progress = missions2.filter(mis => mis.uid === userAccount.uid)
 
 
-      const response5 = await fetch(`https://two025-duplagalactica-final.onrender.com/get_missions_template`, {
+      const response5 = await fetch(`https://two024-duplagalactica.onrender.com/get_missions_template`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${authToken}`

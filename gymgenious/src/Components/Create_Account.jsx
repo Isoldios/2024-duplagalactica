@@ -29,12 +29,12 @@ export default function CreateAccount() {
     const [errorPassword, setErrorPassword] = useState(false);
     const [errorName, setErrorName] = useState(false);
     const [errorDate, setErrorDate] = useState(false);
+    const [openPasswordRequirements, setOpenPasswordRequirements] = useState(false);
     const id = openPasswordRequirements ? 'simple-popper' : undefined;
     const [errorType, setErrorType] = useState(false);
     const [errorEmailRepeated, setErrorEmailRepeated] = useState(false);
     const isSmallScreen = useMediaQuery('(max-width:700px)');
     const [anchorEl, setAnchorEl] = useState(null);
-    const [openPasswordRequirements, setOpenPasswordRequirements] = useState(false);
 
     const validateForm = () => {
         let errors = [];
@@ -108,7 +108,7 @@ export default function CreateAccount() {
                     MissionsComplete:0,
                     type: typeAccount
                 };
-                await fetch('https://two025-duplagalactica-final.onrender.com/create_user', {
+                await fetch('https://two024-duplagalactica.onrender.com/create_user', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export default function CreateAccount() {
                     body: JSON.stringify(newUser),
                 });
                 await sendEmailVerification(firebaseUser, {
-                    url: 'https://2025-duplagalactica-final.vercel.app/redirections?mode=verifyEmail', 
+                    url: 'https://2024-duplagalactica-2gkyslbh1-isoldios-projects.vercel.app//redirections?mode=verifyEmail', 
                     handleCodeInApp: true
                 });
                 setOpenCircularProgress(false);

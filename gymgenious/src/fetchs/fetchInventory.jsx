@@ -8,7 +8,7 @@ const fetchInventory = async ( setItemData,setOpenCircularProgress,setWarningCon
         }
       
       try {
-        const inventoryRequest = await fetch(`https://two025-duplagalactica-final.onrender.com/get_inventory`, {
+        const inventoryRequest = await fetch(`https://two024-duplagalactica.onrender.com/get_inventory`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${authToken}`,
@@ -28,7 +28,7 @@ const fetchInventory = async ( setItemData,setOpenCircularProgress,setWarningCon
         }));
 
 
-        const classesRequest = await fetch('https://two025-duplagalactica-final.onrender.com/get_classes');
+        const classesRequest = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
         if (!classesRequest.ok) {
             throw new Error('Error fetching classes: ' + classesRequest.statusText);
         }

@@ -232,7 +232,7 @@ export default function RoutineCreation() {
             console.error('Token no disponible en localStorage');
             return;
           }
-          const response = await fetch('https://two025-duplagalactica-final.onrender.com/create_routine', {
+          const response = await fetch('https://two024-duplagalactica.onrender.com/create_routine', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

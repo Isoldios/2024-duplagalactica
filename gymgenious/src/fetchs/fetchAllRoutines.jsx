@@ -7,7 +7,7 @@ const fetchRoutines = async (setOpenCircularProgress, setTotalRoutines, setRouti
             return;
         }
 
-        const routinesData = await fetch('https://two025-duplagalactica-final.onrender.com/get_routines', {
+        const routinesData = await fetch('https://two024-duplagalactica.onrender.com/get_routines', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${authToken}`
@@ -18,7 +18,7 @@ const fetchRoutines = async (setOpenCircularProgress, setTotalRoutines, setRouti
         }
         const routines = await routinesData.json();
 
-        const assignedRoutinesData = await fetch('https://two025-duplagalactica-final.onrender.com/get_assigned_routines', {
+        const assignedRoutinesData = await fetch('https://two024-duplagalactica.onrender.com/get_assigned_routines', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${authToken}`
@@ -29,7 +29,7 @@ const fetchRoutines = async (setOpenCircularProgress, setTotalRoutines, setRouti
         }
         const assignedRoutines = await assignedRoutinesData.json();
 
-        const exercisesDataLocal = await fetch('https://two025-duplagalactica-final.onrender.com/get_excersices', {
+        const exercisesDataLocal = await fetch('https://two024-duplagalactica.onrender.com/get_excersices', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${authToken}`
