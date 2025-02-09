@@ -12,7 +12,7 @@ def initialize_firebase():
         firebase_creds_dict = json.loads(firebase_cred_json)
         cred = credentials.Certificate(firebase_creds_dict)
         firebase_admin.initialize_app(cred, {
-            'storageBucket': 'pid22-40703.appspot.com'  
+            'storageBucket': 'pid-e18e4.firebasestorage.app'  
         })
     return firestore.client()
 

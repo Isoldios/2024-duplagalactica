@@ -5,13 +5,13 @@ import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCXwHZO56T1xnoK2XNR3nDwWj5NVbJ6Ltk",
-  authDomain: "pid22-40703.firebaseapp.com",
-  projectId: "pid22-40703",
-  storageBucket: "pid22-40703.appspot.com",
-  messagingSenderId: "200419985545",
-  appId: "1:200419985545:web:24380ac9b1fd4aedaa5e58",
-  measurementId: "G-FJS582T4TQ"
+  apiKey: "AIzaSyCsYKBhYS8TCuF5gdRilkSKzLiWGvmLDfc",
+  authDomain: "pid-e18e4.firebaseapp.com",
+  projectId: "pid-e18e4",
+  storageBucket: "pid-e18e4.firebasestorage.app",
+  messagingSenderId: "791001844484",
+  appId: "1:791001844484:web:10c4fd6fca13524760de51",
+  measurementId: "G-0B1RZE1Q2N"
 };
 
 
