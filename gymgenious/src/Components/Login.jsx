@@ -6,7 +6,6 @@ import LeftBar from '../real_components/NewLeftBar.jsx';
 import { auth } from '../firebase-config.js';
 import {signInWithEmailAndPassword } from 'firebase/auth';
 import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
 import Box from '@mui/material/Box';
@@ -19,9 +18,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [openCircularProgress, setOpenCircularProgress] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [failure, setFailure] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [errorLogin, setErrorLogin] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:700px)');
 
@@ -30,7 +27,7 @@ export default function Login() {
   };
 
   const goToResetPassword = () => {
-    navigate('/reset-password');
+    navigate('/forgot-password');
   };
 
   const loginUser = async (e) => {
@@ -65,25 +62,14 @@ export default function Login() {
   
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-      if (token) {
-        navigate('/');
-        return;
-      } else {
-        setIsAuthenticated(false);
-        return;
-      }
+    if (token) {
+      navigate('/');
+      return;
+    } 
   }, []);
 
   return (
     <div className='full-screen-image-1'>
-      {isAuthenticated ? (
-            <Backdrop
-            sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-            open={true}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        ) : (
           <>
             <LeftBar value={'profile'}/>
             <div className='login-container'>
@@ -147,21 +133,7 @@ export default function Login() {
           ) : (
             null
           )}
-          { failure ? (
-            <div className='alert-container'>
-                <div className='alert-content'>
-                  <Box sx={{ position: 'relative', zIndex: 1 }}>
-                    <Slide direction="up" in={failure} mountOnEnter unmountOnExit >
-                      <Alert severity="error" style={{fontSize:'100%', fontWeight:'bold'}}>Credentials or server error. Try again!</Alert>
-                    </Slide>
-                  </Box>
-                </div>
-            </div>
-          ) : (
-            null
-          )}
         </>
-      )}
     </div>
   );
 }
