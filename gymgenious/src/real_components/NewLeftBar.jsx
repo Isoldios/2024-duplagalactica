@@ -179,13 +179,26 @@ export default function TemporaryDrawer() {
 
   const fetchUser = async () => {
     try {
-      const encodedUserMail = encodeURIComponent(userMail);
-      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`);
-        if (!response.ok) {
-            throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
-        }
-        const data = await response.json();
-        setType(data.type);
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+          console.error('Token not available in localStorage');
+          return;
+      }
+      const encodedEmail = encodeURIComponent(userMail);
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedEmail}`, {
+          method: 'GET', 
+          headers: {
+              'Authorization': `Bearer ${authToken}`
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Error fetching user data: ' + response.statusText);
+      }
+
+      const userData = await response.json();
+      setType(userData.type);
+
     } catch (error) {
         console.error("Error fetching user:", error);
     }
