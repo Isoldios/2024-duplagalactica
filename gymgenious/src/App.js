@@ -27,8 +27,6 @@ import Assitance from './Components/Assistance.jsx';
 import MarkAttendance from './Components/TakeAssistWithQR.jsx';
 import CoachClients from './Components/CoachClients.jsx'
 import ForgotPassword from './Components/forgotPassword.jsx'
-import Inventory from './Components/Inventory.jsx'
-import InventoryCreation from './Components/InventoryCreation.jsx'
 
 function App() {
   return (
@@ -59,8 +57,6 @@ function App() {
         <Route path="/assistance" element={<Assitance/>}/>
         <Route path="/mark-attendance" element={<MarkAttendance/>}/>
         <Route path='/coach-clients' element={<CoachClients/>}/>
-        <Route path='/inventory' element={<Inventory/>}/>
-        <Route path='/inventory-creation' element={<InventoryCreation/>}/>
         <Route path='/forgot-password' element={<ForgotPassword/>}/>
       </Routes>
     </Router>

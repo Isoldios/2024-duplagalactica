@@ -44,7 +44,6 @@ function CouchClasses() {
   const [openCircularProgress, setOpenCircularProgress] = useState(false);
   const [warningConnection, setWarningConnection] = useState(false);
   const [errorToken,setErrorToken] = useState(false);
-  const [fetchedInventory,setFetchInventory] = useState([])
   const [type, setType] = useState(null);
   const [errorSala, setErrorSala] = useState(false);
   const [errorHour, setErrorHour] = useState(false);
@@ -66,7 +65,6 @@ function CouchClasses() {
   const [totalClasses, setTotalClasses] = useState([]);
   const [openCheckList, setOpenCheckList] = useState(false);
   const [viewQualifications, setViewQualifications] = useState(false);
-  const [viewInventory, setViewInventory] = useState(false)
 
 
   useEffect(() => {
@@ -79,9 +77,6 @@ function CouchClasses() {
     setViewQualifications(!viewQualifications)
   }
 
-  const handleViewInventory = () => {
-    setViewInventory(!viewInventory)
-  }
 
   function HalfRatingCoach() {
     return (
@@ -177,77 +172,10 @@ function CouchClasses() {
     setOpenCheckList(null);
   };
 
-  const fetchInventory = async () => {
-    try {
-      const authToken = localStorage.getItem('authToken');
-      if (!authToken) {
-        console.error('Token no disponible en localStorage');
-        return;
-      }
-      
-      try {
-        const response = await fetch(`https://two024-duplagalactica.onrender.com/get_inventory`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Error al obtener los datos del inventario: ' + response.statusText);
-        }
-        const data = await response.json();
-        
-        const itemsWithQuantities = data.map((item) => {
-          const matchingReservation = selectedEvent.reservations.find(
-            (reservation) => reservation.item === item.id
-          );
-          return {
-            ...item,
-            cantidad: matchingReservation ? matchingReservation.cantidad : 0, 
-            totalReservado: 0,
-          };
-        });
-
-        const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
-        if (!response2.ok) {
-          throw new Error('Error al obtener las clases: ' + response2.statusText);
-        }
-        const data2 = await response2.json();
-        data2.forEach((clase) => {
-          clase.reservations.forEach((objeto) => {
-            const item = itemsWithQuantities.find((i) => i.id === objeto.item);
-            if (item && clase.id!=selectedEvent.id) {
-              item.totalReservado += objeto.cantidad;
-            }
-          });
-        });
-        setItemData(itemsWithQuantities);
-      
-      } catch (error) {
-        console.error("Error:", error.message);
-        setOpenCircularProgress(false);
-        setWarningConnection(true);
-        setTimeout(() => {
-            setWarningConnection(false);
-        }, 3000);
-      }
-      
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        setOpenCircularProgress(false);
-        setWarningConnection(true);
-        setTimeout(() => {
-            setWarningConnection(false);
-        }, 3000);
-    }finally {
-      setOpenCircularProgress(false)
-    }
-  };
+  
   
   const handleEditClass = (selectedEvent) => {
-    fetchInventory()
     setEditClass(!editClass);
-    setFetchInventory(selectedEvent.reservations)
     setFetchId(selectedEvent.id)
     setFetchDateFin(selectedEvent.dateFin)
     setFetchDateInicio(selectedEvent.dateInicio)
@@ -410,22 +338,8 @@ function CouchClasses() {
   };
 
   const validateForm = () => {
-    let matchedItems = itemData
-    .map(item => {
-      let matchedItem = fetchedInventory.find(invItem => invItem.item === item.id);
-      if (matchedItem) {
-        return {
-          id: item.id,
-          cantidad1: item.cantidad,
-          cantidad2: matchedItem.cantidad
-        };
-      }
-      return null; 
-    })
-    .filter(item => item !== null);
     let res = true;
-    let allMatch = matchedItems.every((item)=>item.cantidad1==item.cantidad2);
-    if (name==='' && hour === '' && hourFin === '' && date=== '' && salaAssigned==null && maxNum===null && permanent==='' && allMatch) {
+    if (name==='' && hour === '' && hourFin === '' && date=== '' && salaAssigned==null && maxNum===null && permanent==='') {
         setErrorForm(true);
         res = false;
     } else {
@@ -630,39 +544,8 @@ function CouchClasses() {
           });
         }
       });
-      const response5 = await fetch(`https://two024-duplagalactica.onrender.com/get_inventory`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-        },
-      });
-      if (!response5.ok) {
-        throw new Error('Error al obtener los datos del inventario: ' + response5.statusText);
-      }
-      const data5 = await response5.json();
-      const mapData5 = new Map();
 
-      data5.forEach(item => {
-        mapData5.set(item.id, { name: item.name, img: item.img }); 
-      });
-
-      const updatedDataMatches = calendarEvents.map(match => {
-        const updatedReservations = match.reservations.map(reservation => {
-          const matchedData = mapData5.get(reservation.item);
-          return {
-            cantidad: reservation.cantidad,
-            item: reservation.item,
-            name: matchedData?.name || null,  
-            img: matchedData?.img || null,
-          };
-        });
-        return {
-          ...match,
-          reservations: updatedReservations,
-        };
-      });
-
-      const formattedRoutines = updatedDataMatches.map((routine) => {
+      const formattedRoutines = calendarEvents.map((routine) => {
         return {
             ...routine,
             startDisplay: formatDate(new Date(routine.start)), 
@@ -685,21 +568,26 @@ function CouchClasses() {
 
   useEffect(() => {
     const newRowsList = [];
-    const clasesAgregadas = [];
     const filteredClassesSearcher = filterClasses
       ? totalClasses.filter(item =>
           item.name.toLowerCase().startsWith(filterClasses.toLowerCase())
         )
       : totalClasses;
   
-    filteredClassesSearcher.forEach(row => {
-      if (!clasesAgregadas.includes(row.cid)){
-        clasesAgregadas.push(row.cid)
-        newRowsList.push(row);
-      }
-    });
-    console.log("new rows",newRowsList)
-    setNewRows(newRowsList);
+      filteredClassesSearcher.forEach(row => {
+        if (
+          (row.permanent === 'No' &&
+            new Date(row.dateInicio).getTime() - new Date().getTime() <= 6 * 24 * 60 * 60 * 1000 &&
+            new Date(row.dateInicio).getTime() >= new Date().setHours(0, 0, 0, 0)) ||
+          (row.permanent === 'Si' &&
+            new Date(row.start).getTime() - new Date().getTime() <= 6 * 24 * 60 * 60 * 1000 &&
+            new Date(row.start).getTime() >= new Date().setHours(0, 0, 0, 0))
+        ) {
+          newRowsList.push(row);
+        }
+      });
+    
+      setNewRows(newRowsList);
   }, [filterClasses, totalClasses]);
 
   useEffect(() => {
@@ -755,11 +643,6 @@ function CouchClasses() {
                         <div>
                           <MDBBtn outline color="dark" rounded size="sm" className="mx-1"  style={{color: '#424242' }}>Capacity {event.capacity}</MDBBtn>
                           <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>{event.permanent==='Si' ? 'Every week' : 'Just this day'}</MDBBtn>
-                          {userMail && type==='coach' && event.reservations.length!==0? (
-                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleViewInventory}>Inventory reserves</MDBBtn>
-                          ) : (
-                            <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>No inventory reserves</MDBBtn>
-                          )}  
                           {userMail && type==='coach' && event.averageCalification!==0 && event.commentaries?.length!==0 ? (
                               <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleViewQualifications}>qualifications</MDBBtn>
                           ) : (
@@ -979,46 +862,6 @@ function CouchClasses() {
         {selectedEvent && (
           <ECommerce event={selectedEvent}/>
         )}
-        {viewInventory && (
-        <div className="Modal" onClick={handleViewInventory}>
-          <div className="Modal-Content-qualifications" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{marginBottom: '0px'}}>Qualifications</h2>
-            <p style={{
-                marginTop: '5px',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '100%',
-                textAlign: 'center',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                Items reserved
-            </p>
-            <div className="input-container" style={{display:'flex', justifyContent: 'space-between', marginRight: '0px'}}>
-                <div className="input-small-container" style={{flex: 3}}>
-                    <ul style={{maxHeight: '400px', overflowY: 'auto'}}>
-                      {selectedEvent.reservations.map((cm) => (
-                        <li style={{textOverflow: 'ellipsis', maxWidth: 'auto'}}>
-                          {cm.name}
-                        </li>
-                      ))}
-                    </ul>
-                </div>
-                <div className="input-small-container" style={{flex: 3}}>
-                    <ul style={{maxHeight: '400px', overflowY: 'auto',listStyle:'none'}}>
-                      {selectedEvent.reservations.map((cm) => (
-                        <li style={{textOverflow: 'ellipsis', maxWidth: 'auto'}}>
-                          {cm.cantidad}
-                        </li>
-                      ))}
-                    </ul>
-                </div>
-            </div>
-            <button onClick={handleViewInventory}>Close</button>
-          </div>
-        </div>
-      )}
       {warningFetchingSalas ? (
           <div className='alert-container'>
             <div className='alert-content'>
