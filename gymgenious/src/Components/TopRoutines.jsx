@@ -190,7 +190,7 @@ function TopRoutines() {
 
 
     return (
-      <div className="App">
+      <div className="App-top-routines">
           <div style={{width:'100%'}}>
             {selectedEvent && (
                 <ECommerce event={selectedEvent}/>

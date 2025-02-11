@@ -162,7 +162,7 @@ export default function CreateAccount() {
         <div className='App'>
           <>
             <LeftBar value={'profile'}/>
-            <div className='create-account-container-new'>
+            <div className='create-account-container'>
                 <div className='create-account-content'>
                     <h2 style={{color:'#424242'}}>Create account</h2>
                         <div className="input-container">

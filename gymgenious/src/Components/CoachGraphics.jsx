@@ -375,6 +375,8 @@ function CoachGraphics() {
               width: '95%',
               marginLeft: isSmallScreen ? '4%' : '3%',
               marginTop: isSmallScreen ? '55px' : '4%',
+              maxHeight: '100%',
+              overflowY: 'auto'
             }}
           >
             <Box sx={{ flex: 1, width: '100%' }}>
