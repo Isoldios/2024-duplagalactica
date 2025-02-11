@@ -120,6 +120,7 @@ export default function RoutineCreation() {
     };
 
     const handleSelectExercise = (exercise) => {
+      console.log(exercise)
       handleCloseSearch();
       setSelectedExercise(exercise);
       if(routineExercises?.some(stateExercise => stateExercise.id === exercise.id)){
@@ -269,19 +270,6 @@ export default function RoutineCreation() {
       handleCreateRoutine();
     };
 
-    const correctExercisesData = async (exercisesData) => {
-      return exercisesData.map(element => {
-          if (!element.owner) {
-              return {
-                  name: element.name,
-                  description: 'aaaa',
-                  owner: 'Train-Mate'
-              };
-          }
-          return element;
-        });
-    };  
-
     useEffect(() => {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -293,7 +281,7 @@ export default function RoutineCreation() {
     
     useEffect(() => {
       if (userMail) {
-        fetchExercises(setOpenCircularProgress,setWarningFetchingExercises,setExercises,setTotalExercises,correctExercisesData);
+        fetchExercises(setOpenCircularProgress,setWarningFetchingExercises,setExercises,setTotalExercises);
       }
     }, [userMail]);
 

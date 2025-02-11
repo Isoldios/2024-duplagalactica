@@ -63,18 +63,7 @@ export default function CoachExercises() {
         setEditExercise(false);
     };
 
-    const correctExercisesData = async (exercisesData) => {
-        return exercisesData.map(element => {
-            if (!element.owner) {
-                return {
-                    name: element.name,
-                    description: 'aaaa',
-                    owner: 'Train-Mate'
-                };
-            }
-            return element;
-        });
-    };   
+ 
 
     useEffect(() => {
         if(filterExercises!=''){
@@ -154,7 +143,7 @@ export default function CoachExercises() {
         setTimeout(() => {
           setOpenCircularProgress(false);
         }, 7000);
-        await fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises,correctExercisesData);
+        await fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises);
     }
 
     useEffect(() => {
@@ -175,7 +164,7 @@ export default function CoachExercises() {
 
     useEffect(() => {
     if(type==='coach'){
-        fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises,correctExercisesData);
+        fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises);
     }
     }, [type]);
 

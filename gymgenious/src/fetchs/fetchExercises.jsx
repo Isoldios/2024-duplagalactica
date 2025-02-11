@@ -1,4 +1,19 @@
-const fetchExercises = async (setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises,correctExercisesData) => {
+const correctExercisesData = async (exercisesData) => {
+        return exercisesData.map(element => {
+            if (!element.owner) {
+                return {
+                    id: element.id,
+                    name: element.name,
+                    description: 'Exercise from Train-Mate',
+                    owner: 'Train-Mate',
+                    image_url: `${process.env.PUBLIC_URL}/salon_de_gimnasio.jpg`
+                };
+            }
+            return element;
+        });
+    };  
+
+const fetchExercises = async (setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises) => {
     setOpenCircularProgress(true);
     try {
         const authToken = localStorage.getItem('authToken');
