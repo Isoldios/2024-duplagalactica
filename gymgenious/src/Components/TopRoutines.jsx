@@ -215,10 +215,10 @@ function TopRoutines() {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Exercise</TableCell>
-                                            <TableCell>Series</TableCell>
-                                            <TableCell>Reps</TableCell>
-                                            <TableCell>Timing</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Exercise</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Series</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Reps</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Timing</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

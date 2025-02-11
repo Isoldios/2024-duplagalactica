@@ -101,6 +101,7 @@ export default function RoutineCreation() {
           reps: reps,
           series: series,
           timing: timing,
+          name: exercise.name
         }
         setRoutineExercises([...routineExercises, exerciseWithParams]);
         handleCloseModal();
