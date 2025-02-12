@@ -6,7 +6,7 @@ const correctExercisesData = async (exercisesData) => {
                     name: element.name,
                     description: 'Exercise from Train-Mate',
                     owner: 'Train-Mate',
-                    image_url: `${process.env.PUBLIC_URL}/salon_de_gimnasio.jpg`
+                    image_url: `${process.env.PUBLIC_URL}/logoTrainMate.png`
                 };
             }
             return element;

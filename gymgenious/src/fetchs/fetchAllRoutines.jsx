@@ -61,7 +61,7 @@ const fetchRoutines = async (setOpenCircularProgress, setTotalRoutines, setRouti
             ...routine,
             exercise_length: routine.exercises ? routine.exercises.length : 0,
         }));
-
+        console.log(finalRoutines);
         setRoutines(finalRoutines);
         setTotalRoutines(finalRoutines);
         

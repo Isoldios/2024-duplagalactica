@@ -81,7 +81,6 @@ function AllRoutines() {
   const handleSelectEvent = (event) => {
   setSelectedEvent(event);
   handleCloseSearch();
-  console.log(event.excercises)
   };
 
 
@@ -161,7 +160,7 @@ function AllRoutines() {
             <NewLeftBar/>
             <Searcher filteredValues={filterRoutines} setFilterValues={setFilterRoutines} isSmallScreen={isSmallScreen} searchingParameter={'routine name'}/>
             {routines && (
-              <CustomTable columnsToShow={['Name','Owner','Excercises','Likes','There are no routines']} data={routines} handleSelectEvent={handleSelectEvent} vals={['name','owner','exercise_length','cant_asignados']}/> 
+              <CustomTable columnsToShow={['Name','Owner','Exercises ','Likes','There are no routines']} data={routines} handleSelectEvent={handleSelectEvent} vals={['name','owner','exercise_length','cant_asignados']}/> 
             )}  
             {selectedEvent && (
               <ECommerce event={selectedEvent}/>
@@ -182,7 +181,7 @@ function AllRoutines() {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {selectedEvent?.excercises?.map((exercise) => (
+                                        {selectedEvent?.exercises?.map((exercise) => (
                                             <TableRow key={exercise.id}>
                                                 <TableCell>{exercise.name}</TableCell>
                                                 <TableCell>{exercise.series} x</TableCell>

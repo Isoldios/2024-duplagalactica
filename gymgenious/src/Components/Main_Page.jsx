@@ -27,6 +27,7 @@ import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import formatDate from '../functions/formatDate.jsx'
 import Searcher from '../real_components/searcher.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function Main_Page() {
   const [events, setEvents] = useState([]);
@@ -58,8 +59,12 @@ export default function Main_Page() {
   const [userAccount, setUserAccount] = useState([])
   const [changingStars,setChangingStars] = useState(false)
   const [changingComment,setChangingComment] = useState(false)
-  const [viewQualifications, setViewQualifications] = useState(false)
+  const [viewQualifications, setViewQualifications] = useState(false);
+  const navigate = useNavigate();
 
+  const goToUserMemberships = () => {
+    navigate('/user-memberships')
+  }
 
   const fetchUser = async () => {
     setOpenCircularProgress(true);
@@ -285,7 +290,7 @@ export default function Main_Page() {
                                   rounded
                                   block
                                   size="lg"
-                                  
+                                  onClick={goToUserMemberships}
                                 >
                                   You dont have an active membership
                                 </MDBBtn>
@@ -309,6 +314,7 @@ export default function Main_Page() {
                                     rounded
                                     block
                                     size="lg"
+                                    onClick={goToUserMemberships}
                                   >
                                     Upgrade your plan
                                   </MDBBtn>

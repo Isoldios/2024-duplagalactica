@@ -97,11 +97,9 @@ export default function RoutineCreation() {
       if(validateExerciseData()){
         let exerciseWithParams = {
           id: exercise.id,
-          owner: exercise.owner,
           reps: reps,
           series: series,
           timing: timing,
-          name: exercise.name
         }
         setRoutineExercises([...routineExercises, exerciseWithParams]);
         handleCloseModal();
