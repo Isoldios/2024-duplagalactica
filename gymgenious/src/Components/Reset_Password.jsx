@@ -49,7 +49,7 @@ export default function ResetPassword() {
         try {
             if (email==userMail) {
                 await sendPasswordResetEmail(auth, email, {
-                    url: 'https://2025-duplagalactica-final.vercel.app/redirections?mode=resetPassword', 
+                    url: 'https://2024-duplagalactica-2gkyslbh1-isoldios-projects.vercel.app//redirections?mode=resetPassword', 
                     handleCodeInApp: true
                 });
                 setOpenCircularProgress(false);

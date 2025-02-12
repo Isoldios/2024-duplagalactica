@@ -63,18 +63,7 @@ export default function CoachExercises() {
         setEditExercise(false);
     };
 
-    const correctExercisesData = async (exercisesData) => {
-        return exercisesData.map(element => {
-            if (!element.owner) {
-                return {
-                    name: element.name,
-                    description: 'aaaa',
-                    owner: 'Train-Mate'
-                };
-            }
-            return element;
-        });
-    };   
+ 
 
     useEffect(() => {
         if(filterExercises!=''){
@@ -120,7 +109,7 @@ export default function CoachExercises() {
                 console.error('Token no disponible en localStorage');
                 return;
                 }
-                const response = await fetch('https://two025-duplagalactica-final.onrender.com/update_exer_info', {
+                const response = await fetch('https://two024-duplagalactica.onrender.com/update_exer_info', {
                     method: 'PUT', 
                     headers: {
                         'Authorization': `Bearer ${authToken}`
@@ -154,7 +143,7 @@ export default function CoachExercises() {
         setTimeout(() => {
           setOpenCircularProgress(false);
         }, 7000);
-        await fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises,correctExercisesData);
+        await fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises);
     }
 
     useEffect(() => {
@@ -175,7 +164,7 @@ export default function CoachExercises() {
 
     useEffect(() => {
     if(type==='coach'){
-        fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises,correctExercisesData);
+        fetchExercises(setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises);
     }
     }, [type]);
 
@@ -231,7 +220,7 @@ export default function CoachExercises() {
                                     {selectedEvent.description}
                                 </p>
                                 <img 
-                                    src={selectedEvent.image_url} 
+                                    src={`${selectedEvent.image_url}?t=${new Date().getTime()}`}  
                                     alt={selectedEvent.name}
                                     style={{
                                         display: 'block',
@@ -240,7 +229,7 @@ export default function CoachExercises() {
                                         height: 'auto',
                                         borderRadius: '8px'
                                     }} 
-                                />
+                                />
                                 {selectedEvent.owner==userMail? (
                                 <button style={{width: isSmallScreen650 ? '70%' : '30%'}} onClick={()=> handleEditExercise(selectedEvent)}>Edit exercise</button>
                                 ) :(<></>)}                            

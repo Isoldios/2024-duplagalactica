@@ -51,11 +51,6 @@ const CustomTable = ({ columnsToShow, data, handleSelectEvent,vals }) => {
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [order, orderBy, page, rowsPerPage, data]
     );
-    const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-    };
     const handleChangePage = (event, newPage) => {
     setPage(newPage);
     };
@@ -64,8 +59,6 @@ const CustomTable = ({ columnsToShow, data, handleSelectEvent,vals }) => {
     setPage(0);
     };
     
-    
-
     return (
         <div className="Table-Container">
         <Box sx={{ width: '100%', flexWrap: 'wrap', background: '#F5F5F5', border: '2px solid #424242', borderRadius: '10px' }}>
@@ -75,37 +68,16 @@ const CustomTable = ({ columnsToShow, data, handleSelectEvent,vals }) => {
                 <TableHead>
                     <TableRow sx={{ height: '5vh', width: '5vh' }}>
                         <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>
-                        <TableSortLabel active={orderBy === 'name'} direction={orderBy === 'name' ? order : 'asc'} onClick={(event) => handleRequestSort(event, 'name')}>
                             {columnsToShow[0]}
-                            {orderBy === columnsToShow[0] ? (
-                            <Box component="span" sx={visuallyHidden}>
-                                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                            </Box>
-                            ) : null}
-                        </TableSortLabel>
                         </TableCell>
                     {!isSmallScreen && (
                         <TableCell align="right" sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold', color: '#424242' }}>
-                        <TableSortLabel active={orderBy === 'day'} direction={orderBy === 'day' ? order : 'asc'} onClick={(event) => handleRequestSort(event, 'day')}>
                             {columnsToShow[1]}
-                            {orderBy === columnsToShow[1] ? (
-                            <Box component="span" sx={visuallyHidden}>
-                                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                            </Box>
-                            ) : null}
-                        </TableSortLabel>
                         </TableCell>
                     )}
                     {!isSmallScreen250 && (
                         <TableCell align="right" sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold', color: '#424242' }}>
-                        <TableSortLabel active={orderBy === 'excercises.length'} direction={orderBy === 'excercises.length' ? order : 'asc'} onClick={(event) => handleRequestSort(event, 'excercises.length')}>
                             {columnsToShow[2]}
-                            {orderBy === columnsToShow[2] ? (
-                            <Box component="span" sx={visuallyHidden}>
-                                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                            </Box>
-                            ) : null}
-                        </TableSortLabel>
                         </TableCell>
                     )}
                     </TableRow>

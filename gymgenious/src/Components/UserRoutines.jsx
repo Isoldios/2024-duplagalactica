@@ -58,7 +58,7 @@ export default function StickyHeadTable() {
             return;
         }
         const encodedUserMail = encodeURIComponent(userMail);
-        const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
+        const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`, {
         method: 'GET', 
         headers: {
             'Authorization': `Bearer ${authToken}`
@@ -93,12 +93,6 @@ export default function StickyHeadTable() {
         setPage(0);
     };
 
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
     const handleSelectEvent = (event) => {
         setSelectedEvent(event);
         fetchRoutineWithExercises(event.routine);
@@ -121,7 +115,7 @@ export default function StickyHeadTable() {
               console.error('Token no disponible en localStorage');
               return;
             }
-            const response = await fetch('https://two025-duplagalactica-final.onrender.com/get_assigned_routines', {
+            const response = await fetch('https://two024-duplagalactica.onrender.com/get_assigned_routines', {
                 method: 'GET', 
                 headers: {
                   'Authorization': `Bearer ${authToken}`
@@ -135,7 +129,7 @@ export default function StickyHeadTable() {
                 row.users.some((u) => u === userMail)
             );
             
-            const routinesData = await fetch('https://two025-duplagalactica-final.onrender.com/get_routines', {
+            const routinesData = await fetch('https://two024-duplagalactica.onrender.com/get_routines', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${authToken}`
@@ -174,7 +168,7 @@ export default function StickyHeadTable() {
                 console.error('Token no disponible en localStorage');
                 return;
             }
-            const response = await fetch('https://two025-duplagalactica-final.onrender.com/get_routines', {
+            const response = await fetch('https://two024-duplagalactica.onrender.com/get_routines', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${authToken}`
@@ -185,7 +179,7 @@ export default function StickyHeadTable() {
             }
             const routines = await response.json();
             const filteredRows = routines.filter((row) => row.name === routineName);
-            const response2 = await fetch('https://two025-duplagalactica-final.onrender.com/get_excersices', {
+            const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_excersices', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${authToken}`
@@ -330,49 +324,10 @@ export default function StickyHeadTable() {
                             >
                                 <TableHead>
                                     <TableRow sx={{ height: '5vh', width: '5vh' }}>
-                                        <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>
-                                            <TableSortLabel
-                                                active={orderBy === 'name'}
-                                                direction={orderBy === 'name' ? order : 'asc'}
-                                                onClick={(event) => handleRequestSort(event, 'name')}
-                                            >
-                                                Name
-                                                {orderBy === 'name' ? (
-                                                    <Box component="span" sx={visuallyHidden}>
-                                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                                    </Box>
-                                                ) : null}
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>
-                                            <TableSortLabel
-                                                active={orderBy === 'day'}
-                                                direction={orderBy === 'day' ? order : 'asc'}
-                                                onClick={(event) => handleRequestSort(event, 'day')}
-                                            >
-                                                Day
-                                                {orderBy === 'day' ? (
-                                                    <Box component="span" sx={visuallyHidden}>
-                                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                                    </Box>
-                                                ) : null}
-                                            </TableSortLabel>
-                                        </TableCell>
+                                        <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>Name</TableCell>
+                                        <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>Day</TableCell>
                                         {!isSmallScreen && (
-                                            <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>
-                                            <TableSortLabel
-                                                active={orderBy === 'owner'}
-                                                direction={orderBy === 'owner' ? order : 'asc'}
-                                                onClick={(event) => handleRequestSort(event, 'owner')}
-                                            >
-                                                Owner
-                                                {orderBy === 'owner' ? (
-                                                    <Box component="span" sx={visuallyHidden}>
-                                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                                    </Box>
-                                                ) : null}
-                                            </TableSortLabel>
-                                        </TableCell>
+                                            <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold' }}>Owner</TableCell>
                                         )}
                                     </TableRow>
                                 </TableHead>
@@ -456,10 +411,10 @@ export default function StickyHeadTable() {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Exercise</TableCell>
-                                            <TableCell>Series</TableCell>
-                                            <TableCell>Reps</TableCell>
-                                            <TableCell>Timing</TableCell>
+                                            <TableCell style={{fontWeight: 'bold'}}>Exercise</TableCell>
+                                            <TableCell style={{fontWeight: 'bold'}}>Series</TableCell>
+                                            <TableCell style={{fontWeight: 'bold'}}>Reps</TableCell>
+                                            <TableCell style={{fontWeight: 'bold'}}>Timing</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

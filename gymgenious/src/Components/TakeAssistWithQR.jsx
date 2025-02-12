@@ -54,13 +54,13 @@ const MarkAttendance = () => {
   useEffect(()=>{
     const fetchToken = async () => {
       try {
-        const tokenDataResponse = await fetch(`https://two025-duplagalactica-final.onrender.com/get_decoded_token?token=${token}`);
+        const tokenDataResponse = await fetch(`https://two024-duplagalactica.onrender.com/get_decoded_token?token=${token}`);
         const dataToken = await tokenDataResponse.json()
         const eventId=dataToken.eventId
         const mailUsuario=userMail
         const dateInicio = dataToken.start
         const dateFin = dataToken.end
-        const response2 = await fetch('https://two025-duplagalactica-final.onrender.com/get_classes');
+        const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
         if (!response2.ok) {
           throw new Error('Error al obtener las clases: ' + response2.statusText);
         }
@@ -70,7 +70,7 @@ const MarkAttendance = () => {
         .map(event => event.id);
         console.log("estas son las filtered class",filteredClasses)
         if (filteredClasses.includes(eventId)) {
-          const response = await fetch(`https://two025-duplagalactica-final.onrender.com/generate-token-userSide/${eventId}/${dateFin}/${dateInicio}/${mailUsuario}`);
+          const response = await fetch(`https://two024-duplagalactica.onrender.com/generate-token-userSide/${eventId}/${dateFin}/${dateInicio}/${mailUsuario}`);
           const data = await response.json();
           setNewToken(data.token);
         } else {
@@ -99,7 +99,7 @@ const MarkAttendance = () => {
   useEffect(() => {
     if (newToken && logeedIn) {
       try {
-        fetch(`https://two025-duplagalactica-final.onrender.com/attendance?token=${newToken}`, {
+        fetch(`https://two024-duplagalactica.onrender.com/attendance?token=${newToken}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -22,7 +22,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CheckIcon from '@mui/icons-material/Check';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import InventoryIcon from '@mui/icons-material/Inventory';
 import SportsIcon from '@mui/icons-material/Sports';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import TimelineIcon from '@mui/icons-material/Timeline';
@@ -30,7 +29,6 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PaidIcon from '@mui/icons-material/Paid';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
-import PostAddIcon from '@mui/icons-material/PostAdd';
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
@@ -56,8 +54,6 @@ export default function TemporaryDrawer() {
   const goToRankings = () => navigate('/user-rankings');
   const goToAssistance = () => navigate('/assistance');
   const goToYourClients = () => navigate('/coach-clients');
-  const goToInventory = () => navigate('/inventory');
-  const goToInventoryCreation = () => navigate('/inventory-creation');
 
   const navigateTo = (index) => {
     const routes = [
@@ -73,8 +69,6 @@ export default function TemporaryDrawer() {
       goToCoachGraphics,
       goToCoachMemberships,
       goToYourClients,
-      goToInventory,
-      goToInventoryCreation,
       goToLogout,
     ];
     routes[index]();
@@ -123,7 +117,7 @@ export default function TemporaryDrawer() {
   const DrawerListCoach = (
     <Box sx={{ width: 250, background: '#424242' }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {['Home', 'Profile', 'Create class', 'My classes', 'Managing', 'Exercises', 'My routines', 'All routines', 'Top routines', 'Graphics', 'Memberships','Clients assitance','Inventory','Inventory Creation','Logout'].map((text, index) => (
+        {['Home', 'Profile', 'Create class', 'My classes', 'Managing', 'Exercises', 'My routines', 'All routines', 'Top routines', 'Graphics', 'Memberships','Clients assitance','Logout'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton onClick={() => navigateTo(index)}>
               <ListItemIcon>
@@ -139,9 +133,7 @@ export default function TemporaryDrawer() {
                 {index === 9 && <SignalCellularAltIcon sx={{ color: '#48CFCB' }} />}
                 {index === 10 && <PaidIcon sx={{ color: '#48CFCB' }} />}
                 {index === 11 && <EditNoteIcon sx={{ color: '#48CFCB' }} />}
-                {index === 12 && <InventoryIcon sx={{ color: '#48CFCB' }} />}
-                {index === 13 && <PostAddIcon sx={{ color: '#48CFCB' }} />}
-                {index === 14 && <ExitToApp sx={{ color: '#48CFCB' }} />}
+                {index === 12 && <ExitToApp sx={{ color: '#48CFCB' }} />}
               </ListItemIcon>
               <ListItemText primary={text} primaryTypographyProps={{ sx: { color: '#48CFCB', fontWeight: 'bold' } }} />
             </ListItemButton>
@@ -179,13 +171,26 @@ export default function TemporaryDrawer() {
 
   const fetchUser = async () => {
     try {
-      const encodedUserMail = encodeURIComponent(userMail);
-      const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_unique_user_by_email?mail=${encodedUserMail}`);
-        if (!response.ok) {
-            throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
-        }
-        const data = await response.json();
-        setType(data.type);
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+          console.error('Token not available in localStorage');
+          return;
+      }
+      const encodedEmail = encodeURIComponent(userMail);
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedEmail}`, {
+          method: 'GET', 
+          headers: {
+              'Authorization': `Bearer ${authToken}`
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Error fetching user data: ' + response.statusText);
+      }
+
+      const userData = await response.json();
+      setType(userData.type);
+
     } catch (error) {
         console.error("Error fetching user:", error);
     }

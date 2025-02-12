@@ -190,7 +190,7 @@ function TopRoutines() {
 
 
     return (
-      <div className="App">
+      <div className="App-top-routines">
           <div style={{width:'100%'}}>
             {selectedEvent && (
                 <ECommerce event={selectedEvent}/>
@@ -215,14 +215,14 @@ function TopRoutines() {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Exercise</TableCell>
-                                            <TableCell>Series</TableCell>
-                                            <TableCell>Reps</TableCell>
-                                            <TableCell>Timing</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Exercise</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Series</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Reps</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Timing</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {selectedEvent?.excercises?.map((exercise) => (
+                                        {selectedEvent?.exercises?.map((exercise) => (
                                             <TableRow key={exercise.id}>
                                                 <TableCell>{exercise.name}</TableCell>
                                                 <TableCell>{exercise.series} x</TableCell>

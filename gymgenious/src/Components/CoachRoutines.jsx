@@ -246,7 +246,7 @@ function CoachRoutines() {
             console.error('Token no disponible en localStorage');
             return;
           }
-          const response = await fetch('https://two025-duplagalactica-final.onrender.com/update_routine_info', {
+          const response = await fetch('https://two024-duplagalactica.onrender.com/update_routine_info', {
               method: 'PUT', 
               headers: {
                   'Content-Type': 'application/json',
@@ -320,7 +320,7 @@ function CoachRoutines() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/delete_routine', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/delete_routine', {
         method: 'DELETE', 
         headers: {
           'Content-Type': 'application/json',
@@ -363,7 +363,7 @@ function CoachRoutines() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch(`https://two025-duplagalactica-final.onrender.com/get_excersices`, {
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_excersices`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${authToken}`

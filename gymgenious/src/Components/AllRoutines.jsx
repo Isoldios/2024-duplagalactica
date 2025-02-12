@@ -160,7 +160,7 @@ function AllRoutines() {
             <NewLeftBar/>
             <Searcher filteredValues={filterRoutines} setFilterValues={setFilterRoutines} isSmallScreen={isSmallScreen} searchingParameter={'routine name'}/>
             {routines && (
-              <CustomTable columnsToShow={['Name','Owner','Excercises','Likes','There are no routines']} data={routines} handleSelectEvent={handleSelectEvent} vals={['name','owner','exercise_length','cant_asignados']}/> 
+              <CustomTable columnsToShow={['Name','Owner','Exercises ','Likes','There are no routines']} data={routines} handleSelectEvent={handleSelectEvent} vals={['name','owner','exercise_length','cant_asignados']}/> 
             )}  
             {selectedEvent && (
               <ECommerce event={selectedEvent}/>
@@ -174,14 +174,14 @@ function AllRoutines() {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Exercise</TableCell>
-                                            <TableCell>Series</TableCell>
-                                            <TableCell>Reps</TableCell>
-                                            <TableCell>Timing</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Exercise</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Series</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Reps</TableCell>
+                                            <TableCell style={{fontWeight:'bold'}}>Timing</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {selectedEvent?.excercises?.map((exercise) => (
+                                        {selectedEvent?.exercises?.map((exercise) => (
                                             <TableRow key={exercise.id}>
                                                 <TableCell>{exercise.name}</TableCell>
                                                 <TableCell>{exercise.series} x</TableCell>

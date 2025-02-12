@@ -9,7 +9,7 @@ const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnect
           return;
       }
 
-      const classesRequest = await fetch('https://two025-duplagalactica-final.onrender.com/get_classes');
+      const classesRequest = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
       if (!classesRequest.ok) {
           throw new Error('Error fetching classes: ' + classesRequest.statusText);
       }
@@ -23,7 +23,7 @@ const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnect
       }
 
       
-      const attendanceRequest = await fetch('https://two025-duplagalactica-final.onrender.com/get_coach_clients_assistance', {
+      const attendanceRequest = await fetch('https://two024-duplagalactica.onrender.com/get_coach_clients_assistance', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${authToken}`

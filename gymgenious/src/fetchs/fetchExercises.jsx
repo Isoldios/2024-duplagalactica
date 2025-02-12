@@ -1,4 +1,19 @@
-const fetchExercises = async (setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises,correctExercisesData) => {
+const correctExercisesData = async (exercisesData) => {
+        return exercisesData.map(element => {
+            if (!element.owner) {
+                return {
+                    id: element.id,
+                    name: element.name,
+                    description: 'Exercise from Train-Mate',
+                    owner: 'Train-Mate',
+                    image_url: `${process.env.PUBLIC_URL}/logoTrainMate.png`
+                };
+            }
+            return element;
+        });
+    };  
+
+const fetchExercises = async (setOpenCircularProgress,setWarningConnection,setExercises,setTotalExercises) => {
     setOpenCircularProgress(true);
     try {
         const authToken = localStorage.getItem('authToken');
@@ -6,7 +21,7 @@ const fetchExercises = async (setOpenCircularProgress,setWarningConnection,setEx
             console.error('Token not available in localStorage');
             return;
         }
-        const localExercisesRequest = await fetch(`https://two025-duplagalactica-final.onrender.com/get_excersices`, {
+        const localExercisesRequest = await fetch(`https://two024-duplagalactica.onrender.com/get_excersices`, {
             method: 'GET', 
             headers: {
                 'Authorization': `Bearer ${authToken}`

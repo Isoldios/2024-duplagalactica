@@ -6,7 +6,7 @@ const fetchMembership = async (setMemberships,setOpenCircularProgress,setClassPr
           console.error('Token not available in localStorage');
           return;
       }
-      const response = await fetch('https://two025-duplagalactica-final.onrender.com/get_membership_template', {
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_membership_template', {
         method: 'GET', 
         headers: {
             'Authorization': `Bearer ${authToken}`

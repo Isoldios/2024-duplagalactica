@@ -17,7 +17,6 @@ import ItemList from '../real_components/ItemList.jsx';
 import day from '../functions/DateToString.jsx'
 import fetchSalas from '../fetchs/fetchSalas.jsx';
 import fetchUser from '../fetchs/fetchUser.jsx'
-import fetchInventory from '../fetchs/fetchInventory.jsx';
 import validateSalas from '../fetchs/fetchValidateSalas.jsx';
 
 
@@ -59,7 +58,6 @@ export default function CreateClass() {
   const [errorDate, setErrorDate] = useState(false);
   const [errorDateStart, setErrorDateStart] = useState(false);
   const [salaNoDisponible, setSalaNoDisponible] = useState(['1'])
-  const [itemData,setItemData] = useState([])
 
   useEffect(() => {
     if (type!='coach' && type!=null) {
@@ -192,25 +190,18 @@ export default function CreateClass() {
           if(salaAssigned===null){
             throw new Error('Select a room');
           }
-          const response2 = await fetch('https://two025-duplagalactica-final.onrender.com/get_classes');
+          const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
           if (!response2.ok) {
               throw new Error('Error al obtener las clases: ' + response2.statusText);
           }
           const isoDateString = date; 
           const newClassStartTime = new Date(`${date}T${hour}:00Z`);
           const newClassEndTime = new Date(`${date}T${hourFin}:00Z`);
-          const itemsReservados = [];
-          itemData.forEach((item) => {
-            if (item.cantidad > 0) {
-              itemsReservados.push({ item: item.id, cantidad: item.cantidad });
-            }
-          });
           const newClass = {
               name: name,
               dateInicio: newClassStartTime.toISOString(),
               dateFin: newClassEndTime.toISOString(),
               hour: hour,
-              reservations: itemsReservados,
               day: day(isoDateString),
               permanent: permanent,
               owner: userMail,
@@ -219,7 +210,7 @@ export default function CreateClass() {
               sala: salaAssigned
           };
 
-          const response = await fetch('https://two025-duplagalactica-final.onrender.com/create_class', {
+          const response = await fetch('https://two024-duplagalactica.onrender.com/create_class', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -303,13 +294,6 @@ export default function CreateClass() {
       fetchUser(setType,setOpenCircularProgress,userMail,navigate,setWarningConnection)
     }
   }, [userMail]);
-
-
-  useEffect(() => {
-    if(type==='coach' && userMail!=null){
-        fetchInventory(setItemData,setOpenCircularProgress,setWarningConnection)
-    }
-  }, [type])
 
   useEffect(() => {
     if (isSmallScreenImages) {
@@ -449,13 +433,6 @@ export default function CreateClass() {
                           />
                         </div>
                       </div>
-                      <div className="input-container" style={{display:'flex', justifyContent: 'space-between'}}>
-                        <div className="input-small-container">
-                          {itemData.length>0 && 
-                            <ItemList data={itemData} setItemData={setItemData}/>
-                          }
-                        </div>
-                      </div>
                         <ComponenteBotonShowGymRoom/>
                     </>
                   ) : (
@@ -550,13 +527,6 @@ export default function CreateClass() {
                           />
                           {errorDate && (<p style={{color: 'red', margin: '0px'}}>Select a date</p>)}
                         </div>   
-                      </div>
-                      <div className="input-container" style={{display:'flex', justifyContent: 'space-between'}}>
-                        <div className="input-small-container">
-                          {itemData.length>0 && 
-                            <ItemList data={itemData} setItemData={setItemData}/>
-                          }
-                        </div>
                       </div>
                       <button className='button_login' style={{width: '70%'}} onClick={handleViewRooms}>
                     Show gymrooms
