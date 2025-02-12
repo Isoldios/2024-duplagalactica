@@ -220,7 +220,7 @@ export default function CoachExercises() {
                                     {selectedEvent.description}
                                 </p>
                                 <img 
-                                    src={selectedEvent.image_url} 
+                                    src={`${selectedEvent.image_url}?t=${new Date().getTime()}`}  
                                     alt={selectedEvent.name}
                                     style={{
                                         display: 'block',
@@ -229,7 +229,7 @@ export default function CoachExercises() {
                                         height: 'auto',
                                         borderRadius: '8px'
                                     }} 
-                                />
+                                />
                                 {selectedEvent.owner==userMail? (
                                 <button style={{width: isSmallScreen650 ? '70%' : '30%'}} onClick={()=> handleEditExercise(selectedEvent)}>Edit exercise</button>
                                 ) :(<></>)}                            
