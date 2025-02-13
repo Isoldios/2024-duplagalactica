@@ -199,252 +199,7 @@ export default function Main_Page() {
     setNewRows(newRowsList);
   }, [filterClasses, totalClasses]);
 
-  function ECommerce({event}) {
-    
-    return (
-      <div className="vh-100" style={{position:'fixed',zIndex:1000,display:'flex',flex:1,width:'100%',height:'100%',opacity: 1,
-        visibility: 'visible',backgroundColor: 'rgba(0, 0, 0, 0.5)'}} onClick={handleCloseModal}>
-          <MDBContainer style={{display:'flex', width: isSmallScreen700 ? '90%' : '85%'}}>
-            <MDBRow className="justify-content-center" onClick={(e) => e.stopPropagation()} style={{flex:1,display:'flex',alignContent:'center'}}>
-              <MDBCol md="9" lg="7" xl="5" className="mt-5">
-                <MDBCard style={{ borderRadius: '15px', backgroundColor: '#F5F5F5' }}>
-                  <MDBCardBody className="p-4 text-black">
-                    <div>
-                      <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>{event.name}</MDBTypography>
-                      <div className="d-flex align-items-center justify-content-between mb-3">
-                        <p className="small mb-0" style={{color: '#424242' }}><AccessAlarmsIcon sx={{ color: '#48CFCB'}} />{event.dateInicio.split('T')[1].split(':').slice(0, 2).join(':')} - {event.dateFin.split('T')[1].split(':').slice(0, 2).join(':')}</p>
-                        <p className="fw-bold mb-0" style={{color: '#424242' }}>{event.permanent === 'No' ? formatDate(new Date(event.dateInicio)) : formatDate(new Date(event.start))}</p>
-                      </div>
-                    </div>
-                    <div className="d-flex align-items-center mb-4">
-                      <div className="flex-shrink-0">
-                        <MDBCardImage
-                          style={{ width: '70px' }}
-                          className="img-fluid rounded-circle border border-dark border-3"
-                          src={event.sala=='cuyAhMJE8Mz31eL12aPO' ? `${process.env.PUBLIC_URL}/gimnasio.jpeg` : (event.sala=='PmQ2RZJpDXjBetqThVna' ? `${process.env.PUBLIC_URL}/salon_pequenio.jpeg` : (event.sala=='jxYcsGUYhW6pVnYmjK8H' ? `${process.env.PUBLIC_URL}/salon_de_functional.jpeg` : `${process.env.PUBLIC_URL}/salon_de_gimnasio.jpg`)) }
-                          alt='Generic placeholder image'
-                          fluid />
-                      </div>
-                      <div className="flex-grow-1 ms-3">
-                        <div className="d-flex flex-row align-items-center mb-2">
-                          <p className="mb-0 me-2" style={{color: '#424242' }}>{selectedEvent.salaInfo.nombre}</p>
-                        </div>
-                        <div>
-                          <MDBBtn outline color="dark" rounded size="sm" className="mx-1"  style={{color: '#424242' }}>Capacity {event.capacity}</MDBBtn>
-                          <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>{event.permanent==='Si' ? 'Every week' : 'Just this day'}</MDBBtn>
-                          {userMail && type==='client' && selectedEvent.BookedUsers.includes(userMail) && (
-                            <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleChangeCalifyModal}>Calify</MDBBtn>
-                          )}
-                            {event.averageCalification!==0 && event.commentaries?.length!==0 ? (
-                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleViewQualifications}>qualifications</MDBBtn>
-                            ) : (
-                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>no qualifications</MDBBtn>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                    <hr />
-                    <MDBCardText><CollectionsBookmarkIcon sx={{ color: '#48CFCB'}} /> {event.BookedUsers.length} booked users</MDBCardText>
-                    <MDBCardText><EmailIcon sx={{ color: '#48CFCB'}} /> For any doubt ask "{event.owner}"</MDBCardText>
-                    {userMail && type === 'client' && (
-                      (event.permanent === 'No' &&
-                      (new Date(event.dateInicio).getTime() - new Date().getTime() <= 7 * 24 * 60 * 60 * 1000) &&
-                      (new Date(event.dateInicio).getTime() >= new Date().setHours(0, 0, 0, 0))
-                      )
-                      ||
-                      (event.permanent === 'Si' && 
-                      (new Date(event.start).getTime() - new Date().getTime() <= 7 * 24 * 60 * 60 * 1000) &&
-                      (new Date(event.start).getTime() >= new Date().setHours(0, 0, 0, 0))
-                      )
-                    )
-                      ? (
-                        <>
-                        {selectedEvent.BookedUsers && selectedEvent.BookedUsers.includes(userMail)  ? (
-                          <>
-                          { event.day === diaActual &&  (new Date(event.sourceDate).getTime() - new Date().getTime() <= 0)  ? (
-                            <MDBBtn
-                            style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
-                            rounded
-                            block
-                            size="lg"
-                          >
-                            Class is today
-                          </MDBBtn>
-                          ) : (
-                          <MDBBtn
-                          style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
-                          rounded
-                          block
-                          size="lg"
-                          onClick={() => handleUnbookClass(event.id)}
-                        >
-                          Unbook
-                        </MDBBtn>
-                          )}
-                            </>
-                            ) : (
-                              <>
-                              {!membership[0] ? (
-                                <MDBBtn
-                                  style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
-                                  rounded
-                                  block
-                                  size="lg"
-                                  onClick={goToUserMemberships}
-                                >
-                                  You dont have an active membership
-                                </MDBBtn>
-                                ) : (
-                                <>
-                                {selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
-                                  <>
-                                  {membership[0].BookedClasses.length<membership[0].top ? (
-                                    <MDBBtn
-                                    style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
-                                    rounded
-                                    block
-                                    size="lg"
-                                    onClick={() => handleBookClass(event.id)}
-                                  >
-                                    Book
-                                  </MDBBtn>
-                                  ) : (
-                                    <MDBBtn
-                                    style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
-                                    rounded
-                                    block
-                                    size="lg"
-                                    onClick={goToUserMemberships}
-                                  >
-                                    Upgrade your plan
-                                  </MDBBtn>
-                                  )}
-                                  </>
-                                ) : (
-                                <MDBBtn
-                                  style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
-                                  rounded
-                                  block
-                                  size="lg"
-                                >
-                                  FULL
-                                </MDBBtn>
-                                )}
-                                </>)
-                                }
-                                </>
-                        )}
-                        <button 
-                          onClick={handleCloseModal}
-                          className="custom-button-go-back-managing"
-                          style={{
-                            zIndex: '2',
-                            position: 'absolute', 
-                            top: '1%',
-                            left: isSmallScreen700 ? '88%' : '90%', 
-                          }}
-                        >
-                          <CloseIcon sx={{ color: '#F5F5F5' }} />
-                        </button>
-                        </>
-                        ) : (
-                          <>
-                        {selectedEvent.permanent==='No' && (
-                        <>
-                        {userMail && type === 'client' && selectedEvent.BookedUsers && selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
-                          <>
-                           {selectedEvent.BookedUsers.includes(userMail)  ? (
-                             <MDBBtn
-                             style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
-                             rounded
-                             block
-                             size="lg"
-                             onClick={() => handleUnbookClass(event.id)}
-                           >
-                             Unbook
-                           </MDBBtn>
-                           ) : (
-                            <>
-                            {userAccount.Gemas>0 ? (
-                            <MDBBtn
-                              style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
-                              rounded
-                              block
-                              size="lg"
-                              onClick={() => handleBookClassWithGem(event.id)}
-                            >
-                              <DiamondIcon />
-                              Use gem
-                              <DiamondIcon />
-                            </MDBBtn>
-                            ) : (
-                              <MDBBtn
-                                style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
-                                rounded
-                                block
-                                size="lg"
-                              >
-                                You dont have gems
-                              </MDBBtn>
-                            )}
-                            </>
-                          )}
-                          </>
-                        ) : (
-                          <>
-                          {userMail && type === 'client' ? (
-                            <>
-                              {selectedEvent.BookedUsers && selectedEvent.BookedUsers.includes(userMail)  ? (
-                                <MDBBtn
-                                style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
-                                rounded
-                                block
-                                size="lg"
-                                onClick={() => handleUnbookClass(event.id)}
-                              >
-                                Unbook
-                              </MDBBtn>
-                              ) : (
-                                <MDBBtn
-                                style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
-                                rounded
-                                block
-                                size="lg"
-                              >
-                                Full
-                              </MDBBtn>
-                              )}
-                              </>
-                          ) : (
-                            null
-                          )}
-                        </>
-                        )}
-                        </>
-                        )}
-                        
-                          <button 
-                            onClick={handleCloseModal}
-                            className="custom-button-go-back-managing"
-                            style={{
-                              zIndex: '2',
-                              position: 'absolute', 
-                              top: '1%',
-                              left: isSmallScreen700 ? '88%' : '90%',
-                            }}
-                          >
-                            <CloseIcon sx={{ color: '#F5F5F5' }} />
-                          </button>
-                          </>
-                        )}
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-      </div>
-    );
-  }
+  
 
   const changeShowCalendar = () => {
     setShowCalendar(prevState => !prevState);
@@ -572,7 +327,7 @@ export default function Main_Page() {
           setOpenCircularProgress(false)
         }, 6000);
       }
-      
+      console.log(calendarEvents)
       setEvents(calendarEvents);
       setTotalClasses(calendarEvents);
     } catch (error) {
@@ -905,6 +660,253 @@ export default function Main_Page() {
     } 
   }
 
+  function ECommerce({event}) {
+    
+    return (
+      <div className="vh-100" style={{position:'fixed',zIndex:1000,display:'flex',flex:1,width:'100%',height:'100%',opacity: 1,
+        visibility: 'visible',backgroundColor: 'rgba(0, 0, 0, 0.5)'}} onClick={handleCloseModal}>
+          <MDBContainer style={{display:'flex', width: isSmallScreen700 ? '90%' : '85%'}}>
+            <MDBRow className="justify-content-center" onClick={(e) => e.stopPropagation()} style={{flex:1,display:'flex',alignContent:'center'}}>
+              <MDBCol md="9" lg="7" xl="5" className="mt-5">
+                <MDBCard style={{ borderRadius: '15px', backgroundColor: '#F5F5F5' }}>
+                  <MDBCardBody className="p-4 text-black">
+                    <div>
+                      <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>{event.name}</MDBTypography>
+                      <div className="d-flex align-items-center justify-content-between mb-3">
+                        <p className="small mb-0" style={{color: '#424242' }}><AccessAlarmsIcon sx={{ color: '#48CFCB'}} />{event.dateInicio.split('T')[1].split(':').slice(0, 2).join(':')} - {event.dateFin.split('T')[1].split(':').slice(0, 2).join(':')}</p>
+                        <p className="fw-bold mb-0" style={{color: '#424242' }}>{event.permanent === 'No' ? formatDate(new Date(event.dateInicio)) : formatDate(new Date(event.start))}</p>
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center mb-4">
+                      <div className="flex-shrink-0">
+                        <MDBCardImage
+                          style={{ width: '70px' }}
+                          className="img-fluid rounded-circle border border-dark border-3"
+                          src={event.sala=='cuyAhMJE8Mz31eL12aPO' ? `${process.env.PUBLIC_URL}/gimnasio.jpeg` : (event.sala=='PmQ2RZJpDXjBetqThVna' ? `${process.env.PUBLIC_URL}/salon_pequenio.jpeg` : (event.sala=='jxYcsGUYhW6pVnYmjK8H' ? `${process.env.PUBLIC_URL}/salon_de_functional.jpeg` : `${process.env.PUBLIC_URL}/salon_de_gimnasio.jpg`)) }
+                          alt='Generic placeholder image'
+                          fluid />
+                      </div>
+                      <div className="flex-grow-1 ms-3">
+                        <div className="d-flex flex-row align-items-center mb-2">
+                          <p className="mb-0 me-2" style={{color: '#424242' }}>{selectedEvent.salaInfo.nombre}</p>
+                        </div>
+                        <div>
+                          <MDBBtn outline color="dark" rounded size="sm" className="mx-1"  style={{color: '#424242' }}>Capacity {event.capacity}</MDBBtn>
+                          <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>{event.permanent==='Si' ? 'Every week' : 'Just this day'}</MDBBtn>
+                          {userMail && type==='client' && selectedEvent.BookedUsers.includes(userMail) && (
+                            <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleChangeCalifyModal}>Calify</MDBBtn>
+                          )}
+                            {event.averageCalification!==0 && event.commentaries?.length!==0 ? (
+                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }} onClick={handleViewQualifications}>qualifications</MDBBtn>
+                            ) : (
+                              <MDBBtn outline color="dark" rounded size="sm" className="mx-1" style={{color: '#424242' }}>no qualifications</MDBBtn>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <MDBCardText><CollectionsBookmarkIcon sx={{ color: '#48CFCB'}} /> {event.BookedUsers.length} booked users</MDBCardText>
+                    <MDBCardText><EmailIcon sx={{ color: '#48CFCB'}} /> For any doubt ask "{event.owner}"</MDBCardText>
+                    {userMail && type === 'client' && (
+                      (event.permanent === 'No' &&
+                      (new Date(event.dateInicio).getTime() - new Date().getTime() <= 7 * 24 * 60 * 60 * 1000) &&
+                      (new Date(event.dateInicio).getTime() >= new Date().setHours(0, 0, 0, 0))
+                      )
+                      ||
+                      (event.permanent === 'Si' && 
+                      (new Date(event.start).getTime() - new Date().getTime() <= 7 * 24 * 60 * 60 * 1000) &&
+                      (new Date(event.start).getTime() >= new Date().setHours(0, 0, 0, 0))
+                      )
+                    )
+                      ? (
+                        <>
+                        {selectedEvent.BookedUsers && selectedEvent.BookedUsers.includes(userMail)  ? (
+                          <>
+                          { event.day === diaActual &&  (new Date(event.sourceDate).getTime() - new Date().getTime() <= 0)  ? (
+                            <MDBBtn
+                            style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
+                            rounded
+                            block
+                            size="lg"
+                          >
+                            Class is today
+                          </MDBBtn>
+                          ) : (
+                          <MDBBtn
+                          style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
+                          rounded
+                          block
+                          size="lg"
+                          onClick={() => handleUnbookClass(event.id)}
+                        >
+                          Unbook
+                        </MDBBtn>
+                          )}
+                            </>
+                            ) : (
+                              <>
+                              {!membership[0] ? (
+                                <MDBBtn
+                                  style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
+                                  rounded
+                                  block
+                                  size="lg"
+                                  onClick={goToUserMemberships}
+                                >
+                                  You dont have an active membership
+                                </MDBBtn>
+                                ) : (
+                                <>
+                                {selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
+                                  <>
+                                  {membership[0].BookedClasses.length<membership[0].top ? (
+                                    <MDBBtn
+                                    style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
+                                    rounded
+                                    block
+                                    size="lg"
+                                    onClick={() => handleBookClass(event.id)}
+                                  >
+                                    Book
+                                  </MDBBtn>
+                                  ) : (
+                                    <MDBBtn
+                                    style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
+                                    rounded
+                                    block
+                                    size="lg"
+                                    onClick={goToUserMemberships}
+                                  >
+                                    Upgrade your plan
+                                  </MDBBtn>
+                                  )}
+                                  </>
+                                ) : (
+                                <MDBBtn
+                                  style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
+                                  rounded
+                                  block
+                                  size="lg"
+                                >
+                                  FULL
+                                </MDBBtn>
+                                )}
+                                </>)
+                                }
+                                </>
+                        )}
+                        <button 
+                          onClick={handleCloseModal}
+                          className="custom-button-go-back-managing"
+                          style={{
+                            zIndex: '2',
+                            position: 'absolute', 
+                            top: '1%',
+                            left: isSmallScreen700 ? '88%' : '90%', 
+                          }}
+                        >
+                          <CloseIcon sx={{ color: '#F5F5F5' }} />
+                        </button>
+                        </>
+                        ) : (
+                          <>
+                        {selectedEvent.permanent==='No' && (
+                        <>
+                        {userMail && type === 'client' && selectedEvent.BookedUsers && selectedEvent.BookedUsers.length<selectedEvent.capacity ? (
+                          <>
+                           {selectedEvent.BookedUsers.includes(userMail)  ? (
+                             <MDBBtn
+                             style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
+                             rounded
+                             block
+                             size="lg"
+                             onClick={() => handleUnbookClass(event.id)}
+                           >
+                             Unbook
+                           </MDBBtn>
+                           ) : (
+                            <>
+                            {userAccount.Gemas>0 ? (
+                            <MDBBtn
+                              style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
+                              rounded
+                              block
+                              size="lg"
+                              onClick={() => handleBookClassWithGem(event.id)}
+                            >
+                              <DiamondIcon />
+                              Use gem
+                              <DiamondIcon />
+                            </MDBBtn>
+                            ) : (
+                              <MDBBtn
+                                style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
+                                rounded
+                                block
+                                size="lg"
+                              >
+                                You dont have gems
+                              </MDBBtn>
+                            )}
+                            </>
+                          )}
+                          </>
+                        ) : (
+                          <>
+                          {userMail && type === 'client' ? (
+                            <>
+                              {selectedEvent.BookedUsers && selectedEvent.BookedUsers.includes(userMail)  ? (
+                                <MDBBtn
+                                style={{ backgroundColor: '#48CFCB', color: 'white', width: '70%', left: '15%' }} 
+                                rounded
+                                block
+                                size="lg"
+                                onClick={() => handleUnbookClass(event.id)}
+                              >
+                                Unbook
+                              </MDBBtn>
+                              ) : (
+                                <MDBBtn
+                                style={{ backgroundColor: 'red', color: 'white', width: '70%', left: '15%' }} 
+                                rounded
+                                block
+                                size="lg"
+                              >
+                                Full
+                              </MDBBtn>
+                              )}
+                              </>
+                          ) : (
+                            null
+                          )}
+                        </>
+                        )}
+                        </>
+                        )}
+                        
+                          <button 
+                            onClick={handleCloseModal}
+                            className="custom-button-go-back-managing"
+                            style={{
+                              zIndex: '2',
+                              position: 'absolute', 
+                              top: '1%',
+                              left: isSmallScreen700 ? '88%' : '90%',
+                            }}
+                          >
+                            <CloseIcon sx={{ color: '#F5F5F5' }} />
+                          </button>
+                          </>
+                        )}
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       {circularProgressClasses ? (<><loader></loader></>):(<></>)}
@@ -946,6 +948,14 @@ export default function Main_Page() {
               }}
               >
               <EmojiEventsIcon sx={{ color: '#424242' }} />
+              <>{progress?.slice(0, 3).map((item, index) => {
+                if(item.progress===100)
+                  return (
+                <Typography sx={{color: 'red'}}>*</Typography>
+              )
+              }
+                
+              )}</>
             </Button>
           </div>
         </div>
