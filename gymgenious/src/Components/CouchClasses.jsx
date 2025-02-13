@@ -11,7 +11,6 @@ import timeToMinutes from '../functions/TimeToMinutes.jsx'
 import day from '../functions/DateToString.jsx'
 import formatDate from '../functions/formatDate.jsx'
 import ItemList from '../real_components/ItemList.jsx'
-import fetchUser from '../fetchs/fetchUser.jsx'
 import verifyToken from '../fetchs/verifyToken.jsx';
 import Loader from '../real_components/loader.jsx';
 import moment from 'moment';
@@ -25,6 +24,7 @@ import CustomTable from '../real_components/Table4columns.jsx';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router-dom';
+import Checkbox from '@mui/material/Checkbox';
 
 function CouchClasses() {
   const [warningFetchingSalas,setWarningFetchingSalas] = useState(false)
@@ -65,7 +65,91 @@ function CouchClasses() {
   const [totalClasses, setTotalClasses] = useState([]);
   const [openCheckList, setOpenCheckList] = useState(false);
   const [viewQualifications, setViewQualifications] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState(['1']);
+  const [userAccount, setUser] = useState(null)
 
+  const toggleUserSelection = (userId) => {
+    setSelectedUsers((prev) =>
+      prev.includes(userId)
+        ? prev.filter((id) => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
+  const closeCheckList = () => {
+    setOpenCheckList(false);
+  };
+
+  const saveCheckList = async () => {
+    setOpenCircularProgress(true)
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      console.error('Token no disponible en localStorage');
+      return;
+    }
+    const response = await fetch(`https://two024-duplagalactica.onrender.com/get_users`, {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+    });
+    if (!response.ok) {
+        throw new Error('Error al obtener las rutinas: ' + response.statusText);
+    }
+    const data = await response.json();
+    const emailToUidMap = data.reduce((acc, user) => {
+      acc[user.Mail] = user.uid;
+      return acc;
+    }, {});
+    const allUsers = selectedEvent.BookedUsers.map(email => emailToUidMap[email] || email)
+    const updatedSelectedUsers = selectedUsers.map(email => emailToUidMap[email] || email);
+    if (selectedEvent.permanent=='Si') {
+      const formData = new FormData();
+      formData.append('usuarios', allUsers);
+      formData.append('selectedEvent',selectedEvent.id);
+      const response2 = await fetch('https://two024-duplagalactica.onrender.com/update_class_use', {
+          method: 'PUT', 
+          headers: {
+              'Authorization': `Bearer ${authToken}`
+          },
+          body: formData,
+      });
+      if (!response2.ok) {
+          throw new Error('Error al actualizar los datos del usuario: ' + response.statusText);
+      }
+    }
+    const formData3 = new FormData();
+    formData3.append('usuarios', updatedSelectedUsers);
+    formData3.append('selectedEvent',selectedEvent.id);
+    const response3 = await fetch('https://two024-duplagalactica.onrender.com/add_missions', {
+        method: 'POST', 
+        headers: {
+            'Authorization': `Bearer ${authToken}`
+        },
+        body: formData3,
+    });
+    if (!response3.ok) {
+        throw new Error('Error al actualizar los datos de las misiones: ' + response3.statusText);
+    }
+    const formData4 = new FormData();
+    formData4.append('selectedEvent',selectedEvent.id);
+    formData4.append('fecha',formatDate(new Date(selectedEvent.start)))
+    formData4.append('uid',userAccount.uid)
+    const response4 = await fetch('https://two024-duplagalactica.onrender.com/add_assistance', {
+        method: 'POST', 
+        headers: {
+            'Authorization': `Bearer ${authToken}`
+        },
+        body: formData4,
+    });
+    if (!response4.ok) {
+        throw new Error('Error al actualizar los datos de la asistencia: ' + response4.statusText);
+    }
+    setTimeout(() => {
+      setOpenCircularProgress(false);
+    }, 2000);
+    window.location.reload()
+  }
 
   useEffect(() => {
     if (type!='coach' && type!=null) {
@@ -89,66 +173,6 @@ function CouchClasses() {
       </Stack>
     );
   }
-
-  const EventQRCode = ({ selectedEvent}) => {
-    const [qrToken, setQrToken] = useState(null);
-    useEffect(() => {
-      const fetchToken = async () => {
-        try {
-          const response = await fetch(`https://two024-duplagalactica.onrender.com/generate-token/${selectedEvent.id}/${selectedEvent.dateFin}/${selectedEvent.dateInicio}`);
-          const data = await response.json();
-          setQrToken(data.token);
-        } catch (error) {
-          console.error("Error al obtener el token:", error);
-          setOpenCircularProgress(false);
-          setWarningConnection(true);
-          setTimeout(() => {
-              setWarningConnection(false);
-          }, 3000);
-        }
-      };
-  
-      fetchToken();
-    }, [selectedEvent.id]);
-  
-    if (!qrToken) {
-      return <div>Cargando token...</div>;
-    }
-  
-    return (
-      <div className="vh-100" style={{position:'fixed',zIndex:1000,display:'flex',flex:1,width:'100%',height:'100%',opacity: 1,
-        visibility: 'visible',backgroundColor: 'rgba(0, 0, 0, 0.5)'}} onClick={handleCloseCheckList}>
-          <MDBContainer style={{display:'flex'}}>
-            <MDBRow className="justify-content-center" onClick={(e) => e.stopPropagation()} style={{flex:1,display:'flex',alignContent:'center'}}>
-              <MDBCol md="9" lg="7" xl="5" className="mt-5" style={{width:'40%'}}>
-                <MDBCard style={{ borderRadius: '15px', backgroundColor: '#F5F5F5' }}>
-                  <MDBCardBody className="p-4 text-black">
-                    <div>
-                      <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>Assistance for "{selectedEvent.name}"</MDBTypography>
-                    </div>
-                    <div style={{justifyContent:'center',left:'23%',alignContent:'center',width:'60%',position:'relative'}}>
-                      <QRCodeCanvas value={`https://2024-duplagalactica-2gkyslbh1-isoldios-projects.vercel.app//mark-attendance?token=${qrToken}`} size={256} />
-                    </div>
-                    <button 
-                        onClick={handleCloseCheckList}
-                        className="custom-button-go-back-managing"
-                        style={{
-                          zIndex: '2',
-                          position: 'absolute', 
-                          top: '1%',
-                          left: isSmallScreen700 ? '88%' : '90%',
-                        }}
-                      >
-                        <CloseIcon sx={{ color: '#F5F5F5' }} />
-                      </button>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-      </div>
-    );
-  };
 
   const hanldeCheckList = () => {
     setOpenCheckList(true);
@@ -599,9 +623,47 @@ function CouchClasses() {
     }
   }, []);
 
+  const fetchUser = async () => {
+    setOpenCircularProgress(true);
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        console.error('Token no disponible en localStorage');
+        return;
+      }
+      const encodedEmail = encodeURIComponent(userMail);
+      const response = await fetch(`https://two024-duplagalactica.onrender.com/get_unique_user_by_email?mail=${encodedEmail}`, {
+          method: 'GET', 
+          headers: {
+              'Authorization': `Bearer ${authToken}`
+          }
+      });
+        if (!response.ok) {
+            throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
+        }
+        const userData = await response.json();
+        setType(userData.type);
+        setUser(userData)
+        if(userData.type!='coach'){
+          navigate('/');
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setOpenCircularProgress(false)
+        setWarningConnection(true);
+        setTimeout(() => {
+            setWarningConnection(false);
+            localStorage.removeItem('authToken');
+            navigate('/')
+        }, 3000);
+    } finally {
+      setOpenCircularProgress(false)
+    }
+  };
+
   useEffect(() => {
     if (userMail) {
-        fetchUser(setType,setOpenCircularProgress,userMail,setWarningConnection);
+        fetchUser();
     }
   }, [userMail]);
 
@@ -751,9 +813,31 @@ function CouchClasses() {
         )}
         {openCheckList && (
                   <div className="Modal" style={{zIndex:'1001'}}>
-                  <EventQRCode selectedEvent={selectedEvent}/>
+                    <div className="Modal-Content-class-creation" onClick={(e) => e.stopPropagation()}>
+                      <h2>Check List</h2>
+                        {selectedEvent?.BookedUsers?.length!==0 ? (
+                          <>
+                          <div className="check-list-container">
+                            {selectedEvent?.BookedUsers?.map((user, index) => (
+                              <div key={index} className="check-list-item"  >
+                                {user}
+                                <Checkbox
+                                  checked={selectedUsers.includes(user)}
+                                  onChange={() => toggleUserSelection(user)}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                          </>
+                        ) : (
+                          <li>There are not booked users</li>
+                        )}
+                      
+                    <button onClick={closeCheckList} className='button_login' style={{width: isSmallScreen700 ? '70%' : '30%'}}>Cancel</button>
+                    <button onClick={saveCheckList} style={{marginTop: isSmallScreen700 ? '10px' : '', marginLeft: isSmallScreen700 ? '' : '10px', width: isSmallScreen700 ? '70%' : '30%'}} className='button_login'>Save</button>
+                    </div>
                   </div>
-        )}
+                )}
         {editClass && (
             <div className="Modal" style={{zIndex:'1001'}}>
                 <div className="Modal-Content-class-creation" onClick={(e) => e.stopPropagation()}>

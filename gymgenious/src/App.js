@@ -24,7 +24,6 @@ import CoachMemberships from './Components/CoachMemberships.jsx';
 import UserMemberships from './Components/UserMemberships.jsx';
 import UserRankings from './Components/UserRanking.jsx';
 import Assitance from './Components/Assistance.jsx';
-import MarkAttendance from './Components/TakeAssistWithQR.jsx';
 import CoachClients from './Components/CoachClients.jsx'
 import ForgotPassword from './Components/forgotPassword.jsx'
 
@@ -55,7 +54,6 @@ function App() {
         <Route path="/user-memberships" element={<UserMemberships/>}/>
         <Route path="/user-rankings" element={<UserRankings/>}/>
         <Route path="/assistance" element={<Assitance/>}/>
-        <Route path="/mark-attendance" element={<MarkAttendance/>}/>
         <Route path='/coach-clients' element={<CoachClients/>}/>
         <Route path='/forgot-password' element={<ForgotPassword/>}/>
       </Routes>

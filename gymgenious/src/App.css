@@ -890,6 +890,15 @@ iframe {
   text-align: center;
   position: relative;
   z-index: 1001;
+  max-height: 98%;
+  overflow-y: auto;
+}
+
+@media (max-width: 700px) {
+  .Modal-Content-qualifications {
+    max-width: 90%;
+    width: auto;
+  }
 }
 
 .Modal-Content-qualifications button {
@@ -1012,9 +1021,6 @@ iframe {
     max-width: 300px;
   }
   .Modal-Content-class-creation {
-    width: 90%;
-  }
-  .Modal-Content-qualifications {
     width: 90%;
   }
   .Modal-Content-view-exercise {

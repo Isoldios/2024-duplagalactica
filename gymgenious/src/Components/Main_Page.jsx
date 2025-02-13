@@ -1124,39 +1124,72 @@ export default function Main_Page() {
       )}
         {viewQualifications && (
         <div className="Modal" onClick={handleViewQualifications}>
-          <div className="Modal-Content-qualifications" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{marginBottom: '0px'}}>Qualifications</h2>
-            <p style={{
-                marginTop: '5px',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '100%',
-                textAlign: 'center',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                {selectedEvent.name}
-            </p>
-            <div className="input-container" style={{display:'flex', justifyContent: 'space-between', marginRight: '0px'}}>
-                <div className="input-small-container" style={{flex: 1,marginRight: '0px'}}>
-                     <label htmlFor="stars" style={{color:'#14213D'}}>Average Qualification:</label>
-                    <HalfRatingCoach/>
-                </div>
-                <div className="input-small-container" style={{flex: 3}}>
-                <label htmlFor="stars" style={{color:'#14213D'}}>Comments:</label>
-                    <ul style={{maxHeight: '400px', overflowY: 'auto'}}>
-                      {selectedEvent.commentaries.map((cm) => (
-                        <li style={{textOverflow: 'ellipsis', maxWidth: 'auto'}}>
-                          {cm}
-                        </li>
-                      ))}
-                    </ul>
-                </div>
+        <div className="Modal-Content-qualifications" onClick={(e) => e.stopPropagation()}>
+          <h2 style={{ marginBottom: '0px' }}>Qualifications</h2>
+          <p
+            style={{
+              marginTop: '5px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: '100%',
+              textAlign: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {selectedEvent.name}
+          </p>
+          <div
+            className="input-container"
+            style={{
+              display: 'flex',
+              flexDirection: isSmallScreen700 ? 'column' : 'row',
+              justifyContent: 'space-between',
+              alignItems: isSmallScreen700 ? 'center' : 'flex-start',
+              marginRight: '0px',
+              gap: isSmallScreen700 ? '10px' : '0px',
+            }}
+          >
+            <div
+              className="input-small-container"
+              style={{ flex: 1, marginRight: isSmallScreen700 ? '0px' : '10px', textAlign: 'center' }}
+            >
+              <label htmlFor="stars" style={{ color: '#14213D' }}>Average Qualification:</label>
+              <HalfRatingCoach />
             </div>
-            <button onClick={handleViewQualifications}>Close</button>
+            <div className="input-small-container" style={{ flex: 3, maxWidth: isSmallScreen700 ? '100%' : '70%' }}>
+              <label htmlFor="comments" style={{ color: '#14213D' }}>Comments:</label>
+              <ul
+                style={{
+                  maxHeight: '350px',
+                  overflowY: 'auto',
+                  listStyleType: 'disc',
+                  paddingLeft: '20px',
+                }}
+              >
+                {selectedEvent.commentaries.map((cm, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      overflow: 'visible',
+                      whiteSpace: 'normal',
+                      wordWrap: 'break-word',
+                      maxWidth: '98%',
+                      marginBottom: '5px',
+                    }}
+                  >
+                    {cm}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
+          <button onClick={handleViewQualifications}>Close</button>
         </div>
+      </div>
+      
+      
       )}
     </div>
   );
