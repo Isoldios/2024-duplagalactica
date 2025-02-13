@@ -886,10 +886,18 @@ iframe {
   color: #424242;
   font-weight: bold;
   width: auto;
-  max-width: 70%;
+  width: 70%;
   text-align: center;
   position: relative;
   z-index: 1001;
+  max-height: 98%;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .Modal-Content-qualifications {
+    width: 90%;
+  }
 }
 
 .Modal-Content-qualifications button {
