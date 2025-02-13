@@ -29,6 +29,16 @@ def create_class(new_class):
     except Exception as e:
         print(f"Error while creating the class: {e}")
         raise RuntimeError("It was not possible to create the class")
+
+def add_assistance(class_assistance,fecha,uid):
+    try:
+        new_assist = {'date':fecha,'cid':class_assistance,'uid':uid}
+        class_ref = db.collection('classAssistance').add(new_assist)
+        created_class = {**new_assist}
+        return created_class
+    except Exception as e:
+        print(f"Error al crear la clase: {e}")
+        raise RuntimeError("No se pudo crear la clase")
     
 def add_calification(classId, calification, commentary, userId):
     try:

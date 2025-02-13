@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.scheduledFunction = functions.pubsub
-    .schedule("every 60 minutes")
+    .schedule("every 480 minutes")
     .onRun(async (context) => {
       console.log("Ejecutando función programada...");
 
@@ -113,7 +113,7 @@ exports.notifyProfessorOnCancellation = functions.firestore
     });
 
 exports.notifyExpiringMemberships = functions.pubsub
-    .schedule("every 60 minutes")
+    .schedule("every 480 minutes")
     .onRun(async (context) => {
       console.log("Ejecutando función para verificar membresías expirando...");
 

@@ -886,7 +886,7 @@ iframe {
   color: #424242;
   font-weight: bold;
   width: auto;
-  width: 70%;
+  max-width: 70%;
   text-align: center;
   position: relative;
   z-index: 1001;
@@ -894,9 +894,10 @@ iframe {
   overflow-y: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .Modal-Content-qualifications {
-    width: 90%;
+    max-width: 90%;
+    width: auto;
   }
 }
 
@@ -1020,9 +1021,6 @@ iframe {
     max-width: 300px;
   }
   .Modal-Content-class-creation {
-    width: 90%;
-  }
-  .Modal-Content-qualifications {
     width: 90%;
   }
   .Modal-Content-view-exercise {
