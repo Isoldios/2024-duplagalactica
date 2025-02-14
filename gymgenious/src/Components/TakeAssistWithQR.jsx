@@ -68,7 +68,12 @@ const MarkAttendance = () => {
         }
         const data = await response.json();
         console.log("Respuesta del servidor:", data);
-        //navigate('/')
+        setSuccessLecture(true);
+        setOpenCircularProgress(false);
+        setTimeout(()=>{
+          navigate('/')
+        },2000)
+        
         
       } catch (error) {
         console.error(error);

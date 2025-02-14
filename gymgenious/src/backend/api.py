@@ -527,12 +527,8 @@ def mark_attendance():
         token = request.headers.get('Authorization')
         if not token or 'Bearer' not in token:
             return jsonify({'error':'Missing token'})
-        print(request.form)
         uid = request.form.get('uid')
         timestamp = request.form.get('timestamp')
-        # data = request.json
-        # uid = data.get('uid')
-        # timestamp = '12'
         return mark_attendance_route(uid,timestamp)
     except Exception as e:
         print("Error")
