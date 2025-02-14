@@ -521,24 +521,19 @@ def get_coach_clients_assistance():
 #------------------------------------------------
 #------------------------------------------------
 
-@app.route('/attendance', methods=['POST'])
+@app.route('/mark-attendance', methods=['POST'])
 def mark_attendance():
-    token = request.args.get('token')  
-    if not token:
-        return jsonify({'error': 'Token is required'}), 400
-
-    try:
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        event_id = decoded_token['eventId']
-        dateInicio = decoded_token['start']
-        dateEnd = decoded_token['end']
-        userMail = decoded_token['userMail']
-        return mark_attendance_route(event_id,dateInicio,dateEnd,userMail)
-
-    except jwt.ExpiredSignatureError:
-        return jsonify({'error': 'Token had expired'}), 400
-    except jwt.InvalidTokenError:
-        return jsonify({'error': 'Token invalid'}), 400
+    try :
+        token = request.headers.get('Authorization')
+        if not token or 'Bearer' not in token:
+            return jsonify({'error':'Missing token'})
+        data = request.json
+        uid = data.get('uid')
+        timestamp = data.get('timestamp')
+        return mark_attendance(uid,timestamp)
+    except Exception as e:
+        print("Error")
+        return jsonify({'error':'Something went wrong'})
     
 #------------------------------------------------
 #------------------------------------------------
@@ -937,52 +932,17 @@ def assign_routine_to_user():
 #------------------------------------------------
 #------------------------------------------------
 
-def generate_token(event_id,date_fin,date_inicio):
+def generate_token():
     payload = {
-        'eventId': event_id,
-        'start': date_inicio,
-        'end':date_fin,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256') 
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return token
 
-def generate_token_userSide(event_id,date_fin,date_inicio,user_id):
-    payload = {
-        'eventId': event_id,
-        'userMail':user_id,
-        'start': date_inicio,
-        'end':date_fin,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-    }
-    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256') 
-    return token
-
-@app.route('/generate-token/<event_id>/<date_fin>/<date_inicio>', methods=['GET'])
-def generate_qr_token(event_id,date_fin,date_inicio):
-    token = generate_token(event_id,date_fin,date_inicio)  
+@app.route('/generate-token', methods=['GET'])
+def generate_qr_token():
+    token = generate_token()  
     return jsonify({'token': token}), 200
-
-@app.route('/generate-token-userSide/<event_id>/<date_fin>/<date_inicio>/<user_id>', methods=['GET'])
-def generate_qr_token_userSide(event_id,date_fin,date_inicio,user_id):
-    token = generate_token_userSide(event_id,date_fin,date_inicio,user_id)  
-    return jsonify({'token': token}), 200
-
-@app.route('/get_decoded_token', methods=['GET'])
-def get_decoded_token():
-    token = request.args.get('token')  
-    if not token:
-        return jsonify({'error': 'Token is required'}), 400
-    try:
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        event_id = decoded_token['eventId']
-        dateInicio = decoded_token['start']
-        dateEnd = decoded_token['end']
-        return {'eventId':event_id,'start':dateInicio,'end':dateEnd}
-    except jwt.ExpiredSignatureError:
-        return jsonify({'error': 'Token ha expirado'}), 400
-    except jwt.InvalidTokenError:
-        return jsonify({'error': 'Token inválido'}), 400
 
 
 

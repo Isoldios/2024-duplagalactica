@@ -4,9 +4,9 @@ from services.attendanceRoutes import mark_attendance,get_coach_clients_assistan
 
 
     
-def mark_attendance_route(eventId,dateInicio,dateEnd,userMail):
+def mark_attendance_route(uid,timestamp):
     try:
-        created_attandance_message = mark_attendance(eventId,dateInicio,dateEnd,userMail)
+        created_attandance_message = mark_attendance(uid,timestamp)
         return jsonify(created_attandance_message), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
