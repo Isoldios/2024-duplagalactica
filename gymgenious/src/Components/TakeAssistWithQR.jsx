@@ -55,7 +55,7 @@ const MarkAttendance = () => {
       formData.append("uid", user.uid);
   
       try {
-        const response = await fetch("http://127.0.0.1:5000/mark-attendance", {
+        const response = await fetch("https://two024-duplagalactica.onrender.com/mark-attendance", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${authToken}`,
