@@ -4,10 +4,9 @@ from firebase_config import db
 
 
     
-def mark_attendance(eventId,dateInicio,dateEnd,userMail):
+def mark_attendance(uid,timestamp):
     try:
-        new_attendance = {'IdClase':eventId,'MailAlumno':userMail,'Inicio':dateInicio,'Fin':dateEnd}
-        db.collection('assistedClasses').add(new_attendance)
+        new_attendance = {'uid': uid, 'timestamp': timestamp}
         db.collection('historicalAssistance').add(new_attendance)
         return {'message':'Todo ok'}
     except Exception as e:

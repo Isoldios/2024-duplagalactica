@@ -70,7 +70,7 @@ function CouchClasses() {
   }
 
   const EventQRCode = () => {
-
+    const token = localStorage.getItem('authToken');
     return (
       <div className="vh-100" style={{position:'fixed',zIndex:1000,display:'flex',flex:1,width:'100%',height:'100%',opacity: 1,
         visibility: 'visible',backgroundColor: 'rgba(0, 0, 0, 0.5)'}} onClick={handleCloseQr}>
@@ -83,7 +83,7 @@ function CouchClasses() {
                       <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>Assistance for </MDBTypography>
                     </div>
                     <div style={{justifyContent:'center',left:'23%',alignContent:'center',width:'60%',position:'relative'}}>
-                    <QRCodeCanvas value={`http://localhost:3000/mark-attendance?token=${qrToken}`} size={256} />
+                    <QRCodeCanvas value={`http://localhost:3000/mark-attendance?token=${token}`} size={256} />
                     </div>
                     <button 
                         onClick={handleCloseQr}
@@ -105,7 +105,6 @@ function CouchClasses() {
       </div>
     );
   };
-
 
   return (
     <div className="App">
