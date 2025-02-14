@@ -310,6 +310,7 @@ export default function Main_Page() {
             nextEndDate.setDate(nextEndDate.getDate() + 7);
           }
         } else {
+          today.setHours(0,0,0,0)
           if(startDate >= today)
           calendarEvents.push({
             title: clase.name,
@@ -949,7 +950,7 @@ export default function Main_Page() {
               >
               <EmojiEventsIcon sx={{ color: '#424242' }} />
               <>{progress?.slice(0, 3).map((item, index) => {
-                if(item.progress===100)
+                if(item.progress>0)
                   return (
                 <Typography sx={{color: 'red'}}>*</Typography>
               )

@@ -30,12 +30,24 @@ def create_class(new_class):
         print(f"Error while creating the class: {e}")
         raise RuntimeError("It was not possible to create the class")
 
-def add_assistance(class_assistance,fecha,uid):
+def add_assistance(IdClase,Inicio,usuarios):
     try:
-        new_assist = {'date':fecha,'cid':class_assistance,'uid':uid}
-        class_ref = db.collection('classAssistance').add(new_assist)
-        created_class = {**new_assist}
-        return created_class
+        usuarios = usuarios.split(',')
+        usuarios.remove('1')
+        classes_ref = db.collection('classes')
+        doc_ref = classes_ref.document(IdClase)
+        doc = doc_ref.get()
+        current_data = doc.to_dict()
+        booked_users = current_data.get('BookedUsers', [])
+        for usuario in usuarios:
+            new_assist = {'Inicio':Inicio,'IdClase':IdClase,'MailAlumno':usuario}
+            db.collection('assistedClasses').add(new_assist)
+            if usuario in booked_users:
+                booked_users.remove(usuario)
+                doc_ref.update({
+                    'BookedUsers': booked_users
+                })
+        return {'message':'Todo ok'}
     except Exception as e:
         print(f"Error al crear la clase: {e}")
         raise RuntimeError("No se pudo crear la clase")

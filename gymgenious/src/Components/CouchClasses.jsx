@@ -132,11 +132,11 @@ function CouchClasses() {
         throw new Error('Error al actualizar los datos de las misiones: ' + response3.statusText);
     }
     const formData4 = new FormData();
-    formData4.append('selectedEvent',selectedEvent.id);
-    formData4.append('fecha',formatDate(new Date(selectedEvent.start)))
-    formData4.append('uid',userAccount.uid)
+    formData4.append('IdClase',selectedEvent.id);
+    formData4.append('Inicio',selectedEvent.dateInicio)
+    formData4.append('usuarios',selectedUsers)
     const response4 = await fetch('https://two024-duplagalactica.onrender.com/add_assistance', {
-        method: 'POST', 
+        method: 'PUT', 
         headers: {
             'Authorization': `Bearer ${authToken}`
         },

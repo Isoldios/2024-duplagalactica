@@ -305,16 +305,16 @@ def delete_missions():
 #------------------------------------------------
 #------------------------------------------------
 
-@app.route('/add_assistance', methods=['POST'])
+@app.route('/add_assistance', methods=['PUT'])
 def add_assistance():
     try :
         token = request.headers.get('Authorization')
         if not token or 'Bearer' not in token:
             return jsonify({'error':'Missing token'})
-        clase = request.form.get('selectedEvent')
-        uid = request.form.get('uid')
-        fecha = request.form.get('fecha')
-        return add_assistance_route(clase,fecha,uid)
+        IdClase = request.form.get('IdClase')
+        usuarios = request.form.get('usuarios')
+        Inicio = request.form.get('Inicio')
+        return add_assistance_route(IdClase,Inicio,usuarios)
     except Exception as e:
         print("Error")
         return jsonify({'error':'Something went wrong'})
