@@ -63,6 +63,7 @@ function CouchClasses() {
   useEffect(() => {
     if(type==='coach' && userMail!=null){
         fetchAssistance(setOpenCircularProgress,setNewRows,setWarningConnection,userMail)
+        console.log(newRows)
     }
   }, [type])
 
@@ -79,41 +80,35 @@ function CouchClasses() {
   }, []);
 
   const EventQRCode = () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
+  
     return (
-      <div className="vh-100" style={{position:'fixed',zIndex:1000,display:'flex',flex:1,width:'100%',height:'100%',opacity: 1,
-        visibility: 'visible',backgroundColor: 'rgba(0, 0, 0, 0.5)'}} onClick={handleCloseQr}>
-          <MDBContainer style={{display:'flex'}}>
-            <MDBRow className="justify-content-center" onClick={(e) => e.stopPropagation()} style={{flex:1,display:'flex',alignContent:'center'}}>
-              <MDBCol md="9" lg="7" xl="5" className="mt-5" style={{width:'40%'}}>
-                <MDBCard style={{ borderRadius: '15px', backgroundColor: '#F5F5F5' }}>
-                  <MDBCardBody className="p-4 text-black" sx={{justifyContent:'center',alignContent:'center'}}>
-                    <div>
-                      <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>Assistance for </MDBTypography>
-                    </div>
-                    <div style={{justifyContent:'center',alignContent:'center',width:'60%',position:'relative'}}>
-                    <QRCodeCanvas value={`https://2024-duplagalactica.vercel.app/mark-attendance`} size={screenWidth*0.2} />
-                    </div>
-                    <button 
-                        onClick={handleCloseQr}
-                        className="custom-button-go-back-managing"
-                        style={{
-                          zIndex: '2',
-                          position: 'absolute', 
-                          top: '1%',
-                          left: isSmallScreen700 ? '88%' : '90%',
-                        }}
-                      >
-                        <CloseIcon sx={{ color: '#F5F5F5' }} />
-                      </button>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
+      <div className="qr-modal-overlay" onClick={handleCloseQr}>
+        <div className="qr-container" onClick={(e) => e.stopPropagation()}>
+        <button 
+            onClick={handleCloseQr}
+            className="custom-button-go-back-managing"
+            style={{
+              zIndex: '2',
+              position: 'absolute', 
+              top: '1%',
+              left: isSmallScreen700 ? '88%' : '90%',
+            }}
+          >
+            <CloseIcon sx={{ color: '#F5F5F5' }} />
+          </button>
+          <h6 className="qr-title">Assistance</h6>
+          <div className="qr-code-wrapper">
+            <QRCodeCanvas
+              value={`https://2024-duplagalactica.vercel.app/mark-attendance`}
+              size={isSmallScreen700 ? screenWidth*0.4 : screenWidth*0.3}
+            />
+          </div>
+        </div>
       </div>
     );
   };
+  
 
   return (
     <div className="App">
@@ -184,7 +179,7 @@ function CouchClasses() {
             null
         )}
         {newRows && (
-              <CustomTable columnsToShow={['Assisted class','Assisted date','Student','There are users that take assist to your classes']} data={newRows} handleSelectEvent={handleSelectEvent} vals={['className','fecha','MailAlumno']}/> 
+              <CustomTable columnsToShow={['Client','Hour','Assisted date','There are no users that take assistance']} data={newRows} handleSelectEvent={handleSelectEvent} vals={['uid','hora','fecha']}/> 
         )}
         </>
 

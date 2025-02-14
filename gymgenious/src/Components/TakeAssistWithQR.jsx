@@ -150,7 +150,9 @@ const MarkAttendance = () => {
               </div>
         </div>
       ) : (
-        <p>Marcando asistencia...</p> 
+        <div style={{position: 'absolute', top: '45%', left: '45'}}>
+          <p>Marcando asistencia...</p> 
+        </div>
       )}
         </>
     </div>
