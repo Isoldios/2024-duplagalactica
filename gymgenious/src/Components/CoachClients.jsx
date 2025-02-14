@@ -83,7 +83,7 @@ function CouchClasses() {
                       <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>Assistance for </MDBTypography>
                     </div>
                     <div style={{justifyContent:'center',left:'23%',alignContent:'center',width:'60%',position:'relative'}}>
-                    <QRCodeCanvas value={`http://localhost:3000/mark-attendance?token=${token}`} size={256} />
+                    <QRCodeCanvas value={`https://2024-duplagalactica.vercel.app/mark-attendance?token=${token}`} size={256} />
                     </div>
                     <button 
                         onClick={handleCloseQr}
