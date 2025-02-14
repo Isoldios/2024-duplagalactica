@@ -28,7 +28,8 @@ function CouchClasses() {
   const [newRows, setNewRows] = useState([]);
   const [openQr, setOpenQr] = useState(false);
   const isSmallScreen700 = useMediaQuery('(max-width:700px)');
-  
+  const [screenWidth, setWidth] = useState(window.innerWidth);
+
   const handleOpenQr = () => {
     setOpenQr(true);
   };
@@ -68,6 +69,14 @@ function CouchClasses() {
   const handleSelectEvent = () => {
     return
   }
+  
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    
+    window.addEventListener("resize", handleResize);
+    
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const EventQRCode = () => {
     const token = localStorage.getItem('authToken');
@@ -78,12 +87,12 @@ function CouchClasses() {
             <MDBRow className="justify-content-center" onClick={(e) => e.stopPropagation()} style={{flex:1,display:'flex',alignContent:'center'}}>
               <MDBCol md="9" lg="7" xl="5" className="mt-5" style={{width:'40%'}}>
                 <MDBCard style={{ borderRadius: '15px', backgroundColor: '#F5F5F5' }}>
-                  <MDBCardBody className="p-4 text-black">
+                  <MDBCardBody className="p-4 text-black" sx={{justifyContent:'center',alignContent:'center'}}>
                     <div>
                       <MDBTypography tag='h6' style={{color: '#424242',fontWeight:'bold' }}>Assistance for </MDBTypography>
                     </div>
-                    <div style={{justifyContent:'center',left:'23%',alignContent:'center',width:'60%',position:'relative'}}>
-                    <QRCodeCanvas value={`https://2024-duplagalactica.vercel.app/mark-attendance?token=${token}`} size={256} />
+                    <div style={{justifyContent:'center',alignContent:'center',width:'60%',position:'relative'}}>
+                    <QRCodeCanvas value={`https://2024-duplagalactica.vercel.app/mark-attendance`} size={screenWidth*0.2} />
                     </div>
                     <button 
                         onClick={handleCloseQr}

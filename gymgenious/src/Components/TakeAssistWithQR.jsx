@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import {signInWithEmailAndPassword } from 'firebase/auth';
 import Backdrop from '@mui/material/Backdrop';
 import Loader from '../real_components/loader.jsx';
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged  } from "firebase/auth";
 import { serverTimestamp } from "firebase/firestore";
 
 const MarkAttendance = () => {
@@ -37,51 +37,52 @@ const MarkAttendance = () => {
   const auth = getAuth();
 
   useEffect(() => {
-    let token = localStorage.getItem('authToken');
-    if (token) {
-        verifyToken(token,()=>{},setUserMail,()=>{});
-    } else {
-        console.error('No token found');
-    }
-  },[logeedIn]);
-
-  useEffect(() => {
-    const registerAttendance = async () => {
-      const authToken = localStorage.getItem('authToken');
-      if (!authToken) {
-        console.error('Token no disponible en localStorage');
-        return;
-      }
-      if (!token) {
-        setError("Token no válido");
-        setLoading(false);
-        return;
-      }
-
-      const user = auth.currentUser;
+    const registerAttendance = async (user) => {
       if (!user) {
         setError("Debes iniciar sesión para registrar asistencia.");
         setLoading(false);
         return;
       }
-
+  
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        console.error("Token no disponible en localStorage");
+        return;
+      }
+  
       const formData = new FormData();
-      formData.append('timestamp', serverTimestamp());
-      formData.append('uid', user.uid);
-      const response = await fetch('https://two024-duplagalactica.onrender.com/mark-attendance', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            },
-            body: formData,
-      });
-      if (!response.ok) {
-        throw new Error('Error al agregar la asistencia al gym ' + response.statusText);
+      formData.append("timestamp", new Date().toISOString());
+      formData.append("uid", user.uid);
+  
+      try {
+        const response = await fetch("http://127.0.0.1:5000/mark-attendance", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          throw new Error("Error al agregar la asistencia al gym " + response.statusText);
+        }
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data);
+        //navigate('/')
+        
+      } catch (error) {
+        console.error(error);
       }
     };
-
-    registerAttendance();
-  }, [token, auth]);
+  
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        registerAttendance(user);
+      }
+    });
+  
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className='full-screen-image-login'>
@@ -137,7 +138,7 @@ const MarkAttendance = () => {
                   <Box sx={{ position: 'relative', zIndex: 1 }}>
                     <Slide direction="up" in={error} mountOnEnter unmountOnExit >
                         <Alert style={{fontSize:'100%', fontWeight:'bold'}} severity="error">
-                            Error while checking assitance, please try again
+                            Error while checking assitance, please try again: {error}
                         </Alert>
                     </Slide>
                   </Box>
