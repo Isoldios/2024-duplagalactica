@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 import { QRCodeCanvas } from "qrcode.react";
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 import CloseIcon from '@mui/icons-material/Close';
-
+import Searcher from '../real_components/searcher.jsx';
 
 function CouchClasses() {
   const [userMail,setUserMail] = useState(null)
@@ -29,6 +29,24 @@ function CouchClasses() {
   const [openQr, setOpenQr] = useState(false);
   const isSmallScreen700 = useMediaQuery('(max-width:700px)');
   const [screenWidth, setWidth] = useState(window.innerWidth);
+  const [filterRoutines, setFilterRoutines] = useState('');
+  const [totalRoutines, setTotalRoutines] = useState([]);
+  const [routines, setRoutines] = useState([]);
+
+    useEffect(() => {
+      if(filterRoutines!=''){
+        const filteredRoutinesSearcher = totalRoutines.filter(item => 
+          item.clientMail.toLowerCase().startsWith(filterRoutines.toLowerCase())
+        );
+        setRoutines(filteredRoutinesSearcher);
+      } else {
+        setRoutines(totalRoutines);
+      }
+    }, [filterRoutines]);
+
+  useEffect(() => {
+    setNewRows(routines)
+  }, [routines])
 
   const handleOpenQr = () => {
     setOpenQr(true);
@@ -63,9 +81,15 @@ function CouchClasses() {
   useEffect(() => {
     if(type==='coach' && userMail!=null){
         fetchAssistance(setOpenCircularProgress,setNewRows,setWarningConnection,userMail)
-        console.log(newRows)
     }
   }, [type])
+
+  useEffect(() => {
+    if(totalRoutines.length===0){
+      setTotalRoutines(newRows)
+      console.log('pelotudo',totalRoutines);
+    }
+  }, [newRows])
 
   const handleSelectEvent = () => {
     return
@@ -155,6 +179,7 @@ function CouchClasses() {
             <EventQRCode/>
             </div>
         )}
+        <Searcher filteredValues={filterRoutines} setFilterValues={setFilterRoutines} isSmallScreen={isSmallScreen700} searchingParameter={'Client Mail'}/>
         {openCircularProgress ? (
             <Backdrop open={openCircularProgress} sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}>
                 <Loader></Loader>
@@ -179,7 +204,7 @@ function CouchClasses() {
             null
         )}
         {newRows && (
-              <CustomTable columnsToShow={['Client','Hour','Assisted date','There are no users that take assistance']} data={newRows} handleSelectEvent={handleSelectEvent} vals={['uid','hora','fecha']}/> 
+              <CustomTable columnsToShow={['Client','Hour','Assisted date','There are no users that take assistance']} data={newRows} handleSelectEvent={handleSelectEvent} vals={['clientMail','hora','fecha']}/> 
         )}
         </>
 

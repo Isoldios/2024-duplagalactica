@@ -1,7 +1,24 @@
-import formatDate from '../functions/formatDate'
+const convertToArgentinaTime = (timestamp) => {
+  const date = new Date(timestamp);
 
-const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnection,userMail) => {
-    setOpenCircularProgress(true);
+  const argentinaTime = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(date);
+
+  const [fecha, hora] = argentinaTime.split(', ');
+
+  return { fecha, hora };
+};  
+
+const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnection) => {
+  setOpenCircularProgress(true);
     try {
       const authToken = localStorage.getItem('authToken');
       if (!authToken) {
@@ -9,20 +26,17 @@ const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnect
           return;
       }
 
-      const classesRequest = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
-      if (!classesRequest.ok) {
-          throw new Error('Error fetching classes: ' + classesRequest.statusText);
+      const usersRequest = await fetch('https://two024-duplagalactica.onrender.com/get_users', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${authToken}`
+        }
+      });
+      if (!usersRequest.ok) {
+          throw new Error('Error fetching users: ' + usersRequest.statusText);
       }
-      const classList = await classesRequest.json();
+      const users = await usersRequest.json();
 
-
-      const ownedClasses = classList.filter(classItem => classItem.owner === userMail);
-      if (ownedClasses.length === 0) {
-          setOpenCircularProgress(false);
-          return;
-      }
-
-      
       const attendanceRequest = await fetch('https://two024-duplagalactica.onrender.com/get_coach_clients_assistance', {
         method: 'GET',
         headers: {
@@ -35,16 +49,19 @@ const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnect
       const attendanceRecords = await attendanceRequest.json();
 
       const formattedAttendance = attendanceRecords.map(attendance => {
-        const [date, time] = attendance.timestamp.split("T");
-        const timeWithoutMs = time.split(".")[0];
+        const client = users.filter(user => user.uid===attendance.uid);
+        const clientMail = client[0].Mail;
+        const timestampCorrected = convertToArgentinaTime(attendance.timestamp);
           return {
               ...attendance,
-              fecha: date,
-              hora: timeWithoutMs
+              fecha: timestampCorrected['fecha'],
+              hora: timestampCorrected['hora'],
+              clientMail: clientMail,
           };
       });
-      console.log("estos sopn los datos",formattedAttendance)
-      setRows(formattedAttendance);
+      const sortedByDayAndHorAssistance = formattedAttendance.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      console.log("estos sopn los datos",sortedByDayAndHorAssistance)
+      setRows(sortedByDayAndHorAssistance);
 
       
     } catch (error) {
