@@ -139,6 +139,7 @@ const styles = {
     marginBottom: "20px",
   },
   scanner: {
+    backgroundColor: '#e3d5ca',
     filter: "invert(0)",
   },
 };

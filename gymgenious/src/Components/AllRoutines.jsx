@@ -104,7 +104,6 @@ function AllRoutines() {
                           style={{
                             fontSize: '1.2rem',
                             fontWeight: 'bold',
-                            backgroundColor: 'red',
                             color: 'white',
                             fontWeight:'bold',
                             padding: '0.4rem 0.8rem',

@@ -935,7 +935,7 @@ export default function Main_Page() {
       <NewLeftBar/>
       {type==='client' && showCalendar ? (
         <>
-        <div className='input-container-buttons' style={{left: isSmallScreen700 ? '6vh' : '8vh', position: 'absolute', top: '0.5%'}}>
+        <div className='input-container-buttons' style={{left: '50px', position: 'absolute', top: '0.5%'}}>
           <div className='input-small-container-buttons' onClick={handleViewAchievements}>
             <Button onClick={handleViewAchievements}
               style={{
@@ -963,7 +963,7 @@ export default function Main_Page() {
             </Button>
           </div>
         </div>
-        <div className='input-container-buttons' style={{left: isSmallScreen700? '12vh' : '16vh', position: 'absolute', top: '0.5%'}}>
+        <div className='input-container-buttons' style={{left: '97px', position: 'absolute', top: '0.5%'}}>
           <div className='input-small-container-buttons'>
             <Button
               style={{

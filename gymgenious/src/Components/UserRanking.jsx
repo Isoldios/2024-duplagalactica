@@ -332,7 +332,7 @@ export default function StickyHeadTable() {
         <div className="App">
           <>
             <NewLeftBar />
-            <div className='input-container-buttons' style={{left: isSmallScreen ? '6vh' : '8vh', position: 'absolute', top: '0.5%'}}>
+            <div className='input-container-buttons' style={{left: '50px', position: 'absolute', top: '0.5%'}}>
                 <div className='input-small-container-buttons' onClick={handleViewCreateRanking}>
                     <Button onClick={handleViewCreateRanking}
                     style={{
@@ -352,7 +352,7 @@ export default function StickyHeadTable() {
                     </Button>
                 </div>
             </div>
-            <div className='input-container-buttons' style={{left: isSmallScreen? '12vh' : '16vh', position: 'absolute', top: '0.5%'}}>
+            <div className='input-container-buttons' style={{left: '97px', position: 'absolute', top: '0.5%'}}>
                 <div className='input-small-container-buttons'>
                     <Button onClick={handleViewJoinRanking}
                     style={{
