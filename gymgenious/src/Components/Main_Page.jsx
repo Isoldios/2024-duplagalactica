@@ -94,7 +94,7 @@ export default function Main_Page() {
           }
       });
       if (!response3.ok) {
-          throw new Error('Error al obtener los datos del usuario: ' + response.statusText);
+          throw new Error('Error al obtener las gemas del usuario: ' + response3.statusText);
       }
       const data3 = await response3.json();
       const membershipsOfUser = data3.filter(memb => memb.userId == data.uid)
@@ -111,6 +111,9 @@ export default function Main_Page() {
           'Authorization': `Bearer ${authToken}`
         },
       });
+      if (!response2.ok) {
+        throw new Error('Error al obtener las membresias: ' + response2.statusText);
+    }
       const membresia = await response2.json();
       const firstFiler = membresia.filter(memb => membershipIds.includes(memb.id))
       setMembership(firstFiler)

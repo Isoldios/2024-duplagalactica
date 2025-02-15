@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
 import Slide from '@mui/material/Slide';
 import Loader from '../real_components/loader.jsx';
+import { green } from '@mui/material/colors';
 
 export default function ChangePassword() {
     const [password, setPassword] = useState('');
@@ -115,6 +116,54 @@ export default function ChangePassword() {
       setOpenPasswordRequirements2(false);
     };
 
+        const [colorHasNumber, setColorHasNumber] = useState('red');
+        const [colorHasLowerCase, setColorHasLowerCase] = useState('red');
+        const [colorHasUpperCase, setColorHasUpperCase] = useState('red');
+        const [colorHasSpecialChar, setColorHasSpecialChar] = useState('red');
+        const [colorIsValidLength, setColorIsValidLength] = useState('red');
+        const [colorSamePassword, setColorSamePassword] = useState('red');
+        useEffect(() => {
+            const hasNumber = /[0-9]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const isValidLength = password.length > 7;
+            if(hasNumber){
+                setColorHasNumber('green');
+            } else {
+                setColorHasNumber('red');
+            }
+            if(hasLowerCase){
+                setColorHasLowerCase('green');
+            } else {
+                setColorHasLowerCase('red');
+            }
+            if(hasUpperCase){
+                setColorHasUpperCase('green');
+            } else {
+                setColorHasUpperCase('red');
+            }
+            if(hasSpecialChar){
+                setColorHasSpecialChar('green');
+            } else {
+                setColorHasSpecialChar('red');
+            }
+            if(isValidLength){
+                setColorIsValidLength('green');
+            } else {
+                setColorIsValidLength('red');
+            }
+        
+        }, [password]);
+
+    useEffect(() => {
+      if(password!=passwordAgain){
+        setColorSamePassword('red');
+      } else {
+        setColorSamePassword('green')
+      }
+    }, [passwordAgain, password])
+
     return (
     <div className='App'>
           <>
@@ -133,15 +182,15 @@ export default function ChangePassword() {
                       value={password} 
                       onChange={(e) => setPassword(e.target.value)} 
                   />
-                  <Popper id={id} open={openPasswordRequirements} anchorEl={anchorEl}>
-                    <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }} onClick={handleOpenPasswordRequirements}>
-                        <p>The password must contain more than 8 characters.</p>
-                        <p>The password must contain at least 1 number.</p>
-                        <p>The password must contain at least 1 lowercase letter.</p>
-                        <p>The password must contain at least 1 uppercase letter.</p>
-                        <p>The password must contain at least 1 special character.</p>
-                    </Box>
-                </Popper>
+                  <Popper id={id} open={openPasswordRequirements} anchorEl={anchorEl} sx={{maxWidth: '98%'}}>
+                      <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }} onClick={handleOpenPasswordRequirements}>
+                          <p style={{color:colorIsValidLength}}>The password must contain more than 8 characters.</p>
+                          <p style={{color:colorHasNumber}}>The password must contain at least 1 number.</p>
+                          <p style={{color:colorHasLowerCase}}>The password must contain at least 1 lowercase letter.</p>
+                          <p style={{color:colorHasUpperCase}}>The password must contain at least 1 uppercase letter.</p>
+                          <p style={{color:colorHasSpecialChar}}>The password must contain at least 1 special character.</p>
+                      </Box>
+                  </Popper>
                 {errorPassword && (<p style={{color: 'red', margin: '0px', textAlign: 'left'}}>Enter a valid password</p>)}
               </div>
               <div className="input-container" onClick={handleClosePasswordRequirements}>
@@ -156,7 +205,7 @@ export default function ChangePassword() {
                   />
                   <Popper id={id2} open={openPasswordRequirements2} anchorEl={anchorEl2}>
                         <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }} onClick={handleOpenPasswordRequirements2}>
-                            <p>Passwords must be the same</p>
+                            <p style={{color:colorSamePassword}}>Passwords must be the same</p>
                         </Box>
                     </Popper>
                     {errorPasswordRepeated && (<p style={{color: 'red', margin: '0px', textAlign: 'left'}}>Passwords are not equal</p>)}

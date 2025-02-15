@@ -93,6 +93,7 @@ export default function CreateAccount() {
     }
 
     const handleCreateAccount = async () => {
+        const emailLowerCase = email.toLowerCase();
         setErrorEmailRepeated(false);
         setOpenCircularProgress(true);
             try {
@@ -102,7 +103,7 @@ export default function CreateAccount() {
                     uid: firebaseUser.uid,
                     Name: name,
                     Lastname: lastName,
-                    Mail: email,
+                    Mail: emailLowerCase,
                     Birthday: date,
                     Gemas: 0,
                     MissionsComplete:0,
@@ -146,6 +147,45 @@ export default function CreateAccount() {
         } 
       }, []);
 
+    const [colorHasNumber, setColorHasNumber] = useState('red');
+    const [colorHasLowerCase, setColorHasLowerCase] = useState('red');
+    const [colorHasUpperCase, setColorHasUpperCase] = useState('red');
+    const [colorHasSpecialChar, setColorHasSpecialChar] = useState('red');
+    const [colorIsValidLength, setColorIsValidLength] = useState('red');
+    useEffect(() => {
+        const hasNumber = /[0-9]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const isValidLength = password.length > 7;
+        if(hasNumber){
+            setColorHasNumber('green');
+        } else {
+            setColorHasNumber('red');
+        }
+        if(hasLowerCase){
+            setColorHasLowerCase('green');
+        } else {
+            setColorHasLowerCase('red');
+        }
+        if(hasUpperCase){
+            setColorHasUpperCase('green');
+        } else {
+            setColorHasUpperCase('red');
+        }
+        if(hasSpecialChar){
+            setColorHasSpecialChar('green');
+        } else {
+            setColorHasSpecialChar('red');
+        }
+        if(isValidLength){
+            setColorIsValidLength('green');
+        } else {
+            setColorIsValidLength('red');
+        }
+    
+    }, [password]);
+
     const handleSubmit = (e) => {
         if(validateForm()){
             e.preventDefault();
@@ -157,6 +197,8 @@ export default function CreateAccount() {
       setAnchorEl(anchorEl ? null : event.currentTarget);
       setOpenPasswordRequirements(!openPasswordRequirements)
     };
+
+    const today = new Date().toISOString().split("T")[0];
 
     return (
         <div className='App'>
@@ -194,7 +236,8 @@ export default function CreateAccount() {
                                 id="date" 
                                 name="date" 
                                 value={date} 
-                                onChange={(e) => setDate(e.target.value)} 
+                                onChange={(e) => setDate(e.target.value)}
+                                max={today}
                             />
                             {errorDate && (<p style={{color: 'red', margin: '0px', textAlign: 'left'}}>Enter a valid date</p>)}
                         </div>
@@ -205,7 +248,8 @@ export default function CreateAccount() {
                                 id="email" 
                                 name="email" 
                                 value={email} 
-                                onChange={(e) => setEmail(e.target.value)} 
+                                onChange={(e) => setEmail(e.target.value)}
+                                autoComplete="new-password" 
                             />
                             {errorMail && (<p style={{color: 'red', margin: '0px', textAlign: 'left'}}>Enter a email</p>)}
                             {errorEmailRepeated && (<p style={{color: 'red', margin: '0px', textAlign: 'left'}}>An account already exists with this email</p>)}
@@ -219,15 +263,16 @@ export default function CreateAccount() {
                                 name="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="new-password"
                             />
                             {errorPassword && (<p style={{color: 'red', margin: '0px', textAlign: 'left'}}>Enter a valid password</p>)}
-                            <Popper id={id} open={openPasswordRequirements} anchorEl={anchorEl}>
+                            <Popper id={id} open={openPasswordRequirements} anchorEl={anchorEl} sx={{maxWidth: '98%'}}>
                                 <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }} onClick={handleOpenPasswordRequirements}>
-                                    <p>The password must contain more than 8 characters.</p>
-                                    <p>The password must contain at least 1 number.</p>
-                                    <p>The password must contain at least 1 lowercase letter.</p>
-                                    <p>The password must contain at least 1 uppercase letter.</p>
-                                    <p>The password must contain at least 1 special character.</p>
+                                    <p style={{color:colorIsValidLength}}>The password must contain more than 8 characters.</p>
+                                    <p style={{color:colorHasNumber}}>The password must contain at least 1 number.</p>
+                                    <p style={{color:colorHasLowerCase}}>The password must contain at least 1 lowercase letter.</p>
+                                    <p style={{color:colorHasUpperCase}}>The password must contain at least 1 uppercase letter.</p>
+                                    <p style={{color:colorHasSpecialChar}}>The password must contain at least 1 special character.</p>
                                 </Box>
                             </Popper>
                         </div>
