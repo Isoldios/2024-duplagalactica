@@ -160,6 +160,8 @@ export default function CreateAccount() {
         }
     }, [userMail]);
 
+    const today = new Date().toISOString().split("T")[0];
+
     return (
         <div className='App'>
             <>
@@ -270,6 +272,7 @@ export default function CreateAccount() {
                                     value={date || dateFetch}
                                     onChange={(e) => setDate(e.target.value)}
                                     disabled={isDisabled}
+                                    max={today}
                                 />
                             </div>
                         </MDBCol>

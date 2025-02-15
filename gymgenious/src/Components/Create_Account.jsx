@@ -310,7 +310,7 @@ export default function CreateAccount() {
                         <Box sx={{ position: 'relative', zIndex: 1 }}>
                             <Slide direction="up" in={success} mountOnEnter unmountOnExit >
                                 <Alert style={{fontSize:'100%', fontWeight:'bold'}} icon={<CheckIcon fontSize="inherit" /> } severity="success">
-                                    Account successfully created!
+                                    Account successfully created, now verify your account checking your email!
                                 </Alert>
                             </Slide>
                         </Box>

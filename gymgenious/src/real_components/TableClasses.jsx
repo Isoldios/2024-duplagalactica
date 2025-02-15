@@ -26,6 +26,22 @@ function EnhancedTable({ newRows, user, userType, handleSelectEvent }) {
   const isMobileScreen = useMediaQuery('(min-height:750px)');
   const [maxHeight, setMaxHeight] = useState('600px');
 
+      const visibleRows = React.useMemo(
+      () =>
+      [...newRows]
+          .sort((a, b) =>
+          order === 'asc'
+              ? a[orderBy] < b[orderBy]
+              ? -1
+              : 1
+              : a[orderBy] > b[orderBy]
+              ? -1
+              : 1
+          )
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+      [order, orderBy, page, rowsPerPage, newRows]
+      );
+
   function formatDate(date) {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses comienzan desde 0
     const day = String(date.getDate()).padStart(2, '0');
@@ -33,12 +49,6 @@ function EnhancedTable({ newRows, user, userType, handleSelectEvent }) {
     
     return `${year}-${month}-${day}`;
   }
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -66,22 +76,6 @@ function EnhancedTable({ newRows, user, userType, handleSelectEvent }) {
     }
   }, [isSmallScreen400, isSmallScreen500, isMobileScreen])
 
-  const visibleRows = React.useMemo(
-    () =>
-      [...newRows]
-        .sort((a, b) =>
-          order === 'asc'
-            ? a[orderBy] < b[orderBy]
-              ? -1
-              : 1
-            : a[orderBy] > b[orderBy]
-            ? -1
-            : 1
-        )
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage, newRows]
-  );
-
   return (
     <Box sx={{ width: '100%', flexWrap: 'wrap', background: '#F5F5F5', border: '2px solid #424242', borderRadius: '10px' }}>
       <Paper
@@ -103,65 +97,21 @@ function EnhancedTable({ newRows, user, userType, handleSelectEvent }) {
             <TableHead>
               <TableRow sx={{ height: '5vh', width: '5vh' }}>
                 <TableCell sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold',color: '#424242' }}>
-                  <TableSortLabel
-                    active={orderBy === 'name'}
-                    direction={orderBy === 'name' ? order : 'asc'}
-                    onClick={(event) => handleRequestSort(event, 'name')}
-                  >
                     Name
-                    {orderBy === 'name' ? (
-                      <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                      </Box>
-                    ) : null}
-                  </TableSortLabel>
                 </TableCell>
                 {!isSmallScreen500 && (
                   <TableCell align="right" sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold', color: '#424242' }}>
-                    <TableSortLabel
-                      active={orderBy === 'hour'}
-                      direction={orderBy === 'hour' ? order : 'asc'}
-                      onClick={(event) => handleRequestSort(event, 'hour')}
-                    >
                       Start time
-                      {orderBy === 'hour' ? (
-                        <Box component="span" sx={visuallyHidden}>
-                          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                      ) : null}
-                    </TableSortLabel>
                   </TableCell>
                 )}
                 {!isSmallScreen400 && (
                   <TableCell align="right" sx={{ borderBottom: '1px solid #424242', borderRight: '1px solid #424242', fontWeight: 'bold', color: '#424242' }}>
-                    <TableSortLabel
-                      active={orderBy === 'start'}
-                      direction={orderBy === 'start' ? order : 'asc'}
-                      onClick={(event) => handleRequestSort(event, 'start')}
-                    >
                       Date
-                      {orderBy === 'start' ? (
-                        <Box component="span" sx={visuallyHidden}>
-                          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                      ) : null}
-                    </TableSortLabel>
                   </TableCell>
                 )}
                 {!isSmallScreen600 && (
                   <TableCell align="right" sx={{ borderBottom: '1px solid #424242', fontWeight: 'bold', color: '#424242' }}>
-                    <TableSortLabel
-                      active={orderBy === 'permanent'}
-                      direction={orderBy === 'permanent' ? order : 'asc'}
-                      onClick={(event) => handleRequestSort(event, 'permanent')}
-                    >
                       Recurrent
-                      {orderBy === 'permanent' ? (
-                        <Box component="span" sx={visuallyHidden}>
-                          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                      ) : null}
-                    </TableSortLabel>
                   </TableCell>
                 )}
               </TableRow>

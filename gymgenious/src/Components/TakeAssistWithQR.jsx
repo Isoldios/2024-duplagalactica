@@ -39,7 +39,13 @@ const MarkAttendance = () => {
   useEffect(() => {
     const registerAttendance = async (user) => {
       if (!user) {
-        setError("Debes iniciar sesión para registrar asistencia.");
+        setError("You must login to register assistance");
+        setLoading(false);
+        return;
+      }
+
+      if (user.type!='client') {
+        setError('You must be a client to register assistance');
         setLoading(false);
         return;
       }
