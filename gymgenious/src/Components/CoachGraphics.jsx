@@ -86,7 +86,6 @@ function ExercisesVsUsers({exersCoachUsers, isSmallScreen}) {
     const orderedClasses = exersCoachUsers.sort((a, b) => b.count - a.count);
     const classesNames = orderedClasses?.map(clase => clase.exercise);
     const classesData = orderedClasses?.map(clase => clase.count);
-    console.log(orderedClasses)
   
     return (
       <Box sx={{
@@ -271,30 +270,19 @@ function CoachGraphics() {
             }
         });
         const exercisesDataFromTrainMate = await response4.json();
+        const allExercises = [...exercisesDataFromTrainMate.exercises, ...exercisesData]
         const routinesWithExercisesData = data2.map((routine) => {
             const updatedExercises = routine.excercises.map((exercise) => {
-                if (exercise.owner === "Train-Mate") {
-                    const matchedExercise = exercisesDataFromTrainMate.exercises.find((ex) => ex.id === exercise.id);
-                    if (matchedExercise) {
-                        return {
-                            ...exercise,
-                            name: matchedExercise.name,
-                            description: matchedExercise.description,
-                        };
-                    }
-                } else {
-                    const matchedExercise = exercisesData.find((ex) => ex.id === exercise.id);
-                    if (matchedExercise) {
-                        return {
-                            ...exercise,
-                            name: matchedExercise.name,
-                            description: matchedExercise.description,
-                        };
-                    }
-                }
+                  const matchedExercise = allExercises.find((ex) => ex.id === exercise.id);
+                  if (matchedExercise) {
+                      return {
+                          ...exercise,
+                          name: matchedExercise.name,
+                          description: matchedExercise.description,
+                      };
+                  }
                 return exercise; 
             });
-
             return {
                 ...routine,
                 excercises: updatedExercises, 
@@ -303,25 +291,25 @@ function CoachGraphics() {
         
         const exerciseCountMap = {};
 
-        for (const user of bookedUsersArray) {
-            const exercisesSeen = new Set();
-            userRoutinesMap[user].forEach(routineId => {
-                const routine = routinesWithExercisesData.find(r => r.id === routineId);
-                if (routine) {
-                    routine.excercises.forEach(exercise => {
-                        exercisesSeen.add(exercise.name);
-                    });
-                }
-            });
+      for (const user of bookedUsersArray) {
+          // Recorremos todas las rutinas de cada usuario
+          userRoutinesMap[user].forEach(routineId => {
+              const routine = routinesWithExercisesData.find(r => r.id === routineId);
+              if (routine) {
+                  // Si encontramos la rutina, contamos todos los ejercicios de esa rutina
+                  routine.excercises.forEach(exercise => {
+                      exerciseCountMap[exercise.name] = (exerciseCountMap[exercise.name] || 0) + 1;
+                  });
+              }
+          });
+      }
 
-            exercisesSeen.forEach(exercise => {
-                exerciseCountMap[exercise] = (exerciseCountMap[exercise] || 0) + 1;
-            });
-        }
+      // Convertimos el objeto en un arreglo de resultados para tener el ejercicio y su cuenta
+      const resultArray = Object.entries(exerciseCountMap).map(([exercise, count]) => ({ exercise, count }));
 
-        const resultArray = Object.entries(exerciseCountMap).map(([exercise, count]) => ({ exercise, count }));
+      // Aquí podrías hacer algo con el resultado final
+      setExersCoachUsers(resultArray);
 
-        setExersCoachUsers(resultArray);
     } catch (error) {
         console.error("Error fetching classes:", error);
         setOpenCircularProgress(false);

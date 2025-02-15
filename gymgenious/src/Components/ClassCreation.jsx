@@ -317,6 +317,10 @@ export default function CreateClass() {
     setOpenHourRequirements(false);
   }
 
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const todayCalendar = today.toISOString().split("T")[0];
+
   return (
     <div className='full-screen-image-2'>
       {!showSalas ? (
@@ -413,7 +417,8 @@ export default function CreateClass() {
                               id="date" 
                               name="date" 
                               value={date} 
-                              onChange={(e) => setDate(e.target.value)} 
+                              onChange={(e) => setDate(e.target.value)}
+                              min={todayCalendar}
                             />
                             {errorDate && (<p style={{color: 'red', margin: '0px'}}>Select a date</p>)}
                             {errorDateStart && (<p style={{color: 'red', margin: '0px'}}>Cannot create classes in the past</p>)}
@@ -523,7 +528,8 @@ export default function CreateClass() {
                             id="date" 
                             name="date" 
                             value={date} 
-                            onChange={(e) => setDate(e.target.value)} 
+                            onChange={(e) => setDate(e.target.value)}
+                            min={todayCalendar}
                           />
                           {errorDate && (<p style={{color: 'red', margin: '0px'}}>Select a date</p>)}
                         </div>   

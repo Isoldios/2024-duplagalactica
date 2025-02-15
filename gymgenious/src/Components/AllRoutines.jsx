@@ -159,7 +159,7 @@ function AllRoutines() {
             <NewLeftBar/>
             <Searcher filteredValues={filterRoutines} setFilterValues={setFilterRoutines} isSmallScreen={isSmallScreen} searchingParameter={'routine name'}/>
             {routines && (
-              <CustomTable columnsToShow={['Name','Owner','Exercises ','Likes','There are no routines']} data={routines} handleSelectEvent={handleSelectEvent} vals={['name','owner','exercise_length','cant_asignados']}/> 
+              <CustomTable columnsToShow={['Name','Owner','Exercises ','Users','There are no routines']} data={routines} handleSelectEvent={handleSelectEvent} vals={['name','owner','exercise_length','cant_asignados']}/> 
             )}  
             {selectedEvent && (
               <ECommerce event={selectedEvent}/>
