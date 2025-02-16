@@ -188,11 +188,6 @@ function CoachGraphics() {
   const fetchClasses = async () => {
     setOpenCircularProgress(true);
     try {
-      const authToken = localStorage.getItem('authToken');
-        if (!authToken) {
-          console.error('Token no disponible en localStorage');
-          return;
-        }
       const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
