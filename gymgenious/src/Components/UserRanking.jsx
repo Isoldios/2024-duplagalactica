@@ -234,7 +234,6 @@ export default function StickyHeadTable() {
                 }
                 const data = await response.json();
                 const userRankings = data.filter(rank=>(rank.id==nameRanking && rank.password==passwordRanking))
-                console.log("estos son los ur",passwordRanking)
                 if (userRankings.length==0) {
                     throw new Error('No existe ningun ranking asi');
                 }

@@ -87,7 +87,6 @@ function CouchClasses() {
   useEffect(() => {
     if(totalRoutines.length===0){
       setTotalRoutines(newRows)
-      console.log('pelotudo',totalRoutines);
     }
   }, [newRows])
 

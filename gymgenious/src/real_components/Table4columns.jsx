@@ -19,7 +19,6 @@ const CustomTable = ({ columnsToShow, data, handleSelectEvent,vals }) => {
     const isSmallScreen = useMediaQuery('(max-width:700px)');
 
     useEffect(() => {
-    console.log("asi llega la data", data)
     if(isSmallScreen) {
         setRowsPerPage(10);
     } else {

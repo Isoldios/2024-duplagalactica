@@ -73,7 +73,6 @@ const MarkAttendance = () => {
           throw new Error("Error al agregar la asistencia al gym " + response.statusText);
         }
         const data = await response.json();
-        console.log("Respuesta del servidor:", data);
         setSuccessLecture(true);
         setOpenCircularProgress(false);
         setTimeout(()=>{

@@ -119,7 +119,6 @@ export default function RoutineCreation() {
     };
 
     const handleSelectExercise = (exercise) => {
-      console.log(exercise)
       handleCloseSearch();
       setSelectedExercise(exercise);
       if(routineExercises?.some(stateExercise => stateExercise.id === exercise.id)){

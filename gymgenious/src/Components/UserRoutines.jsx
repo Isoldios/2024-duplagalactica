@@ -199,7 +199,6 @@ export default function StickyHeadTable() {
                 throw new Error('Error al obtener los ejercicios de Train Mate: ' + response3.statusText);
             }
             const exercisesDataFromTrainMate = await response3.json();
-            console.log("Ejercicios de Train Mate:", exercisesDataFromTrainMate);
             const updatedExercises = filteredRows[0].excercises.map((exercise) => {
                 let matchedExercise = exercisesData.find((ex) => ex.id === exercise.id);
                 if (!matchedExercise && Array.isArray(exercisesDataFromTrainMate.exercises)) {

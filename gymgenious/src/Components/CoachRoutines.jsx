@@ -382,7 +382,6 @@ function CoachRoutines() {
       });
       const exercisesDataFromTrainMate = await response2.json();
       const totalExercises = exercisesData.concat(exercisesDataFromTrainMate.exercises);
-      console.log(totalExercises)
       setExercises(totalExercises);
       setTotalExercises(totalExercises);
       setOpenCircularProgress(false);

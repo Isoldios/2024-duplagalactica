@@ -58,7 +58,7 @@ const QRScanner = () => {
         scanner.clear();
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       }
     );
 

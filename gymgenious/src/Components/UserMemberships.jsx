@@ -59,7 +59,6 @@ export default function UserMemberships() {
         throw new Error('Error al obtener las salas: ' + response.statusText);
       }
       const data = await response.json();
-      console.log("asi se ve",data)
       setMemberships(data)
       setTimeout(() => {
         setOpenCircularProgress(false);
@@ -227,7 +226,6 @@ export default function UserMemberships() {
             membInfo, 
           };
         });
-        console.log("membresia",membFinal)
         setMembership(membFinal);
         if(data.type!='client'){
           navigate('/');
@@ -319,7 +317,6 @@ export default function UserMemberships() {
   }
 
   const ComponentMyMembership = () => {
-    console.log(membership[0])
     return (
       <div className="membership-card">
       <h2 className='h2-membership'>My Membership</h2>

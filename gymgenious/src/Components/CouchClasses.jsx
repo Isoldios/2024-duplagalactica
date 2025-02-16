@@ -231,7 +231,12 @@ function CouchClasses() {
           return;
         }
 
-        const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
+        const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
+          method: 'GET', 
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+      })
         if (!response2.ok) {
             throw new Error('Error al obtener las clases: ' + response2.statusText);
         }
@@ -441,8 +446,6 @@ function CouchClasses() {
       const data = await response.json();
       const dataFinal = data.filter(room => room.id == sala);
       
-      console.log("data final", dataFinal);
-      console.log("capacidad", (maxNum || fetchCapacity));
       if (dataFinal.length === 0) {
         console.error("No se encontró la sala.");
         setErrorCapacity(true);
@@ -475,7 +478,12 @@ function CouchClasses() {
           console.error('Token no disponible en localStorage');
           return;
         }
-      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+    })
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
       }
@@ -497,7 +505,12 @@ function CouchClasses() {
           salaInfo, 
         };
       });
-      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments');
+      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+    });
       if (!response3.ok) {
         throw new Error('Error al obtener los comentarios: ' + response3.statusText);
       }
@@ -577,7 +590,6 @@ function CouchClasses() {
             recurrent: routine.permanent=='Si' ? 'Yes' : 'No'
         };
       });
-      console.log("estas son las clases", formattedRoutines)
       setTotalClasses(formattedRoutines);
       setOpenCircularProgress(false);
     } catch (error) {

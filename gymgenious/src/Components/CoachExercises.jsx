@@ -43,7 +43,6 @@ export default function CoachExercises() {
     }, [type]);
 
     const handleSelectEvent = (event) => {
-        console.log("evento",event)
         setSelectedEvent(event);
     };
 
@@ -80,11 +79,6 @@ export default function CoachExercises() {
 
     const validateForm = () => {
         let res = true
-        console.log("name",name)
-        console.log("fetchedName",fetchName)
-        console.log("desc",desc)
-        console.log("fetchedDesc",fetchDes)
-        console.log("image",image)
         if ((name==fetchName || name=='') && (desc==fetchDes || desc=='') && (!image || image==fetchImg)) {
             res = false
             setErrorNoChange(true)

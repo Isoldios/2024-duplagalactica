@@ -225,7 +225,17 @@ export default function Main_Page() {
   const fetchClasses = async () => {
     setOpenCircularProgress(true)
     try {
-      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
+      const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+          console.error('Token no disponible en localStorage');
+          return;
+        }
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+    })
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
       }
@@ -246,7 +256,12 @@ export default function Main_Page() {
       });
   
       const calendarEvents = [];
-      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments');
+      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+    });
       if (!response3.ok) {
         throw new Error('Error al obtener los comentarios: ' + response3.statusText);
       }
@@ -285,7 +300,6 @@ export default function Main_Page() {
         const CorrectStarDate = new Date(startDate.getTime() + 60 * 3 * 60 * 1000);
         const endDate = new Date(clase.dateFin);
         const CorrectEndDate = new Date(endDate.getTime() + 60 * 3 * 60 * 1000);
-        console.log("esto es el correct",(CorrectEndDate.getTime()-CorrectStarDate.getTime())/(1000*60))
         today.setHours(CorrectStarDate.getHours(), CorrectStarDate.getMinutes(), CorrectStarDate.getSeconds(), CorrectStarDate.getMilliseconds())
         if (clase.permanent === "Si") {
           let nextStartDate = CorrectStarDate;
@@ -331,7 +345,6 @@ export default function Main_Page() {
           setOpenCircularProgress(false)
         }, 6000);
       }
-      console.log(calendarEvents)
       setEvents(calendarEvents);
       setTotalClasses(calendarEvents);
     } catch (error) {
@@ -650,7 +663,6 @@ export default function Main_Page() {
         const template = templates.find(temp => temp.id === mission.mid);
         return template ? { ...mission, ...template } : mission;
       });
-      console.log("resultado nuevo",enrichedProgress)
       setProgress(enrichedProgress)
       setTimeout(() => {
         setOpenCircularProgress(false)

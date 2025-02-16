@@ -41,16 +41,6 @@ def assign_mission(amount,users):
         print(f"Error while assigning missions: {e}")
         raise RuntimeError("It was not possible to assign missions")
 
-def get_missions():
-    try:
-        missions_ref = db.collection('missions')
-        docs = missions_ref.stream()
-        missions = [{'id': doc.id, **doc.to_dict()} for doc in docs]
-        return missions
-    except Exception as e:
-        print(f"Error while getting missions: {e}")
-        raise RuntimeError("It was not possible to get missions")
-
 def delete_missions(missions):
     try:
         missions = missions.split(',')

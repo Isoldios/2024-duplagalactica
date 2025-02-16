@@ -46,7 +46,6 @@ export default function Login() {
       }
       const token = await user.getIdToken();
       localStorage.setItem('authToken', token);
-      console.log('Token almacenado:', localStorage.getItem('authToken'));
       setOpenCircularProgress(false);
       setSuccess(true);
       setTimeout(() => {

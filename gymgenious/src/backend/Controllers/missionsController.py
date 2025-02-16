@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from services.missionsRoutes import add_mission_progress,add_missions,get_missions,delete_missions,get_missions_progress,get_missions_template,assign_mission
+from services.missionsRoutes import add_mission_progress,add_missions,delete_missions,get_missions_progress,get_missions_template,assign_mission
 
 def add_missions_route(users,selectedEvent):
     try:
@@ -13,13 +13,6 @@ def assign_mission_route(amount,users):
     try:
         assignes_mission = assign_mission(amount,users)
         return jsonify(assignes_mission), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-def get_missions_route():
-    try:
-        missions = get_missions()
-        return jsonify(missions), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

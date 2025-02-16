@@ -8,13 +8,18 @@ const validateSalas = async (setValidating,setOpenCircularProgress,setErrorSalas
     setErrorSalas(false);
     try {
         const salasError = []
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            console.error('Token not available in localStorage');
-            return;
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+          console.error('Token no disponible en localStorage');
+          return;
         }
 
-        const classResponse = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
+        const classResponse = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
+          method: 'GET', 
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+      })
         if (!classResponse.ok) {
             throw new Error('Error fetching classes: ' + classResponse.statusText);
         }

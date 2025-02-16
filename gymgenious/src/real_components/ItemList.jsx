@@ -2,10 +2,6 @@ import { useEffect } from "react";
 
 const ItemList = ({data,setItemData}) => {
     
-    useEffect(() => {
-        console.log("asi llega aaa data", data)
-    }, []);
-    
     const incrementQuantity = (itemName) => {
       setItemData((prevItems) =>
         prevItems.map((item) =>

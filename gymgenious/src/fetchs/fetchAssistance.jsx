@@ -60,7 +60,6 @@ const fetchAssistance = async (setOpenCircularProgress,setRows,setWarningConnect
           };
       });
       const sortedByDayAndHorAssistance = formattedAttendance.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      console.log("estos sopn los datos",sortedByDayAndHorAssistance)
       setRows(sortedByDayAndHorAssistance);
 
       

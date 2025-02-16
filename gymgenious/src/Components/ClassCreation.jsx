@@ -167,7 +167,6 @@ export default function CreateClass() {
       let dateStart = new Date(parseInt(year), parseInt(month)-1, parseInt(dayy));
       dateStart.setHours(parseInt(hourss), parseInt(minutes));
       let today = new Date();
-      console.log(dateStart)
       if(dateStart<today){
         errors.push('Cannot create classes in the past');
         setErrorDateStart(true);
@@ -190,7 +189,12 @@ export default function CreateClass() {
           if(salaAssigned===null){
             throw new Error('Select a room');
           }
-          const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
+          const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
+            method: 'GET', 
+            headers: {
+              'Authorization': `Bearer ${authToken}`
+            }
+        })
           if (!response2.ok) {
               throw new Error('Error al obtener las clases: ' + response2.statusText);
           }
