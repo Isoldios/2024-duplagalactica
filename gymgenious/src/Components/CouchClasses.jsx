@@ -231,12 +231,7 @@ function CouchClasses() {
           return;
         }
 
-        const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
-          method: 'GET', 
-          headers: {
-            'Authorization': `Bearer ${authToken}`
-          }
-      })
+        const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
         if (!response2.ok) {
             throw new Error('Error al obtener las clases: ' + response2.statusText);
         }
@@ -478,12 +473,7 @@ function CouchClasses() {
           console.error('Token no disponible en localStorage');
           return;
         }
-      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
-        method: 'GET', 
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-    })
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
       }
@@ -505,12 +495,7 @@ function CouchClasses() {
           salaInfo, 
         };
       });
-      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments', {
-        method: 'GET', 
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-    });
+      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments');
       if (!response3.ok) {
         throw new Error('Error al obtener los comentarios: ' + response3.statusText);
       }

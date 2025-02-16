@@ -189,12 +189,7 @@ export default function CreateClass() {
           if(salaAssigned===null){
             throw new Error('Select a room');
           }
-          const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
-            method: 'GET', 
-            headers: {
-              'Authorization': `Bearer ${authToken}`
-            }
-        })
+          const response2 = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
           if (!response2.ok) {
               throw new Error('Error al obtener las clases: ' + response2.statusText);
           }

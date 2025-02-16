@@ -14,12 +14,7 @@ const validateSalas = async (setValidating,setOpenCircularProgress,setErrorSalas
           return;
         }
 
-        const classResponse = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
-          method: 'GET', 
-          headers: {
-            'Authorization': `Bearer ${authToken}`
-          }
-      })
+        const classResponse = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
         if (!classResponse.ok) {
             throw new Error('Error fetching classes: ' + classResponse.statusText);
         }
