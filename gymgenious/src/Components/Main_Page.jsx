@@ -87,12 +87,7 @@ export default function Main_Page() {
       const data = await response.json();
       setUserAccount(data)
       setType(data.type);      
-      const response3 = await fetch(`https://two024-duplagalactica.onrender.com/get_memb_user`, {
-          method: 'GET', 
-          headers: {
-            'Authorization': `Bearer ${authToken}`
-          }
-      });
+      const response3 = await fetch(`https://two024-duplagalactica.onrender.com/get_memb_user`);
       if (!response3.ok) {
           throw new Error('Error al obtener las gemas del usuario: ' + response3.statusText);
       }
@@ -105,12 +100,7 @@ export default function Main_Page() {
       const formattedDate = `${year}-${month}-${day}`;
       const membresiaFiltered = membershipsOfUser.filter(memb => memb.exp.split('T')[0] > formattedDate); 
       const membershipIds = membresiaFiltered.map(memb => memb.membershipId);
-      const response2 = await fetch(`https://two024-duplagalactica.onrender.com/get_memberships`, {
-        method: 'GET', 
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        },
-      });
+      const response2 = await fetch(`https://two024-duplagalactica.onrender.com/get_memberships`);
       if (!response2.ok) {
         throw new Error('Error al obtener las membresias: ' + response2.statusText);
     }

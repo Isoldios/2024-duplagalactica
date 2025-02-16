@@ -386,25 +386,11 @@ def add_mission_progress():
 
 @app.route('/get_memb_user', methods=['GET'])
 def get_memb_user():
-    try :
-        token = request.headers.get('Authorization')
-        if not token or 'Bearer' not in token:
-            return jsonify({'error':'Missing token'})
-        return get_memb_user_route()
-    except Exception as e:
-        print("Error")
-        return jsonify({'error':'Something went wrong'})
+    return get_memb_user_route()
 
 @app.route('/get_memberships', methods=['GET'])
 def get_unique_user_membership():
-    try :
-        token = request.headers.get('Authorization')
-        if not token or 'Bearer' not in token:
-            return jsonify({'error':'Missing token'})
-        return get_unique_user_membership_route()
-    except Exception as e:
-        print("Error")
-        return jsonify({'error':'Something went wrong'})
+    return get_unique_user_membership_route()
 
 @app.route('/get_membership_template', methods=['GET'])
 def get_membership_template():
