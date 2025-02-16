@@ -193,12 +193,7 @@ function CoachGraphics() {
           console.error('Token no disponible en localStorage');
           return;
         }
-      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
-        method: 'GET', 
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-    })
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
       }

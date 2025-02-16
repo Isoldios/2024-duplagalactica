@@ -560,25 +560,11 @@ def mark_attendance():
 #------------------------------------------------
 @app.route('/get_classes', methods=['GET'])
 def get_classes():
-    try:
-        token = request.headers.get('Authorization')
-        if not token or 'Bearer' not in token:
-            return jsonify({'error':'Missing token'})
-        return get_classes_route()
-    except Exception as e:
-        print("Error")
-        return jsonify({'error':'Something went wrong'})
+    return get_classes_route()
 
 @app.route('/get_comments', methods=['GET'])
 def get_comments():
-    try:
-        token = request.headers.get('Authorization')
-        if not token or 'Bearer' not in token:
-            return jsonify({'error':'Missing token'})
-        return get_comments_route()
-    except Exception as e:
-        print("Error")
-        return jsonify({'error':'Something went wrong'})
+    return get_comments_route()
 
 #------------------------------------------------
 #------------------------------------------------

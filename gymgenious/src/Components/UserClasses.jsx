@@ -183,12 +183,7 @@ function UsserClasses() {
           console.error('Token no disponible en localStorage');
           return;
         }
-      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes', {
-        method: 'GET', 
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-    })
+      const response = await fetch('https://two024-duplagalactica.onrender.com/get_classes');
       if (!response.ok) {
         throw new Error('Error al obtener las clases: ' + response.statusText);
       }
@@ -207,12 +202,7 @@ function UsserClasses() {
           salaInfo, 
         };
       });
-      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments', {
-        method: 'GET', 
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        }
-    });
+      const response3 = await fetch('https://two024-duplagalactica.onrender.com/get_comments');
       if (!response3.ok) {
         throw new Error('Error al obtener los comentarios: ' + response3.statusText);
       }
