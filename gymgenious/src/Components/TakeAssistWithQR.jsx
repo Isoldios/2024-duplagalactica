@@ -14,6 +14,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Loader from '../real_components/loader.jsx';
 import { getAuth, onAuthStateChanged  } from "firebase/auth";
 import { serverTimestamp } from "firebase/firestore";
+import fetchUser from '../fetchs/fetchUser.jsx';
 
 const MarkAttendance = () => {
   const location = useLocation();
@@ -35,64 +36,78 @@ const MarkAttendance = () => {
   const [errorLogin, setErrorLogin] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:700px)');
   const auth = getAuth();
+  const [type, setType] = useState(null);
 
   useEffect(() => {
     const registerAttendance = async (user) => {
-      if (!user) {
-        setError("You must login to register assistance");
-        setLoading(false);
-        return;
-      }
-
-      if (user.type!='client') {
-        setError('You must be a client to register assistance');
-        setLoading(false);
-        return;
-      }
-  
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        console.error("Token no disponible en localStorage");
-        return;
-      }
-  
-      const formData = new FormData();
-      formData.append("timestamp", new Date().toISOString());
-      formData.append("uid", user.uid);
-  
-      try {
-        const response = await fetch("https://two024-duplagalactica.onrender.com/mark-attendance", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: formData,
-        });
-  
-        if (!response.ok) {
-          throw new Error("Error al agregar la asistencia al gym " + response.statusText);
+      console.log(type)
+      if(type==='client'){
+        if (!user) {
+          setError("You must login to register assistance");
+          setLoading(false);
+          return;
         }
-        const data = await response.json();
-        setSuccessLecture(true);
-        setOpenCircularProgress(false);
+  
+        if (type!='client') {
+          setError('You must be a client to register assistance');
+          setLoading(false);
+          navigate('/');
+          return;
+        }
+    
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+          console.error("Token no disponible en localStorage");
+          return;
+        }
+    
+        const formData = new FormData();
+        formData.append("timestamp", new Date().toISOString());
+        formData.append("uid", user.uid);
+    
+        try {
+          const response = await fetch("https://two024-duplagalactica.onrender.com/mark-attendance", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: formData,
+          });
+    
+          if (!response.ok) {
+            throw new Error("Error al agregar la asistencia al gym " + response.statusText);
+          }
+          const data = await response.json();
+          setSuccessLecture(true);
+          setOpenCircularProgress(false);
+          setTimeout(()=>{
+            navigate('/')
+          },2000)
+          
+          
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
         setTimeout(()=>{
-          navigate('/')
-        },2000)
-        
-        
-      } catch (error) {
-        console.error(error);
+          setError('You must be a client to register assistance');
+          setLoading(false);
+          setTimeout(() => {
+            navigate('/');
+          }, 3000)
+        }, 7500)
       }
     };
   
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      fetchUser(setType,setOpenCircularProgress,user.email,navigate,setError);
       if (user) {
         registerAttendance(user);
       }
     });
   
     return () => unsubscribe();
-  }, []);
+  }, [type]);
 
   return (
     <div className='full-screen-image-login'>

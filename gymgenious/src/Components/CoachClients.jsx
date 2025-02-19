@@ -123,7 +123,7 @@ function CouchClasses() {
           <h6 className="qr-title">Assistance</h6>
           <div className="qr-code-wrapper">
             <QRCodeCanvas
-              value={`https://2024-duplagalactica.vercel.app/mark-attendance`}
+              value={`http://172.29.148.157:3000/mark-attendance`}
               size={isSmallScreen700 ? screenWidth*0.4 : screenWidth*0.3}
             />
           </div>
@@ -152,7 +152,7 @@ function CouchClasses() {
         )}
           <>
         <NewLeftBar/>
-        <div className='input-container-buttons' style={{left: '7vh', position: 'absolute', top: '0.5%'}}>
+        <div className='input-container-buttons' style={{left: isSmallScreen700 ?'87%' : '95%', position: 'absolute', top: '0.5%'}}>
           <div className='input-small-container-buttons'>
             <Button
               style={{

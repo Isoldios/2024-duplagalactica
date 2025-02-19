@@ -376,7 +376,7 @@ export default function Main_Page() {
         console.error('Token no disponible en localStorage');
         return;
       }
-      const response = await fetch('https://two024-duplagalactica.onrender.com/book_class', {
+      const response = await fetch('http://127.0.0.1:5000/book_class', {
         method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',
@@ -389,7 +389,7 @@ export default function Main_Page() {
       }
       await fetchClasses();
       window.location.reload();
-      setOpenCircularProgress(false);
+      
       handleCloseModal();
       setTimeout(() => {
         setSuccessBook(false);

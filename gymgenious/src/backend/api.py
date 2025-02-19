@@ -627,17 +627,27 @@ def unbook_class():
 
 @app.route('/book_class', methods=['PUT'])
 def book_class():
-    try :
+    try:
         token = request.headers.get('Authorization')
-        if not token or 'Bearer' not in token:
-            return jsonify({'error':'Missing token'})
         event = request.json.get('event')
         mail = request.json.get('mail')
         uid = request.json.get('uid')
-        return book_class_route(event,mail,uid)
+        verification_token(token,mail,uid)
+        return book_class_route(event, mail, uid)
     except Exception as e:
-        print("Error")
-        return jsonify({'error':'Something went wrong'})
+        print('error', e)
+        return jsonify({'error': 'Something went wrong'})
+    
+def verification_token(token,mail,uid):
+    if 'Bearer' not in token:
+        raise ValueError("Missing Token")
+    token_without_bearer = token.split(" ")[1]
+    token_value = jwt.decode(token_without_bearer, options={"verify_signature": False})
+    tokenUid = token_value['user_id']
+    tokenMail = token_value['email']
+    if (tokenUid!=uid or mail!=tokenMail):
+        raise ValueError("User Unauthorized")
+
     
 @app.route('/book_class_with_gem', methods=['PUT'])
 def book_class_with_gem():
